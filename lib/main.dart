@@ -1,5 +1,6 @@
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main(){
   runApp(const EventlyApp());
@@ -16,6 +17,9 @@ class EventlyApp extends StatelessWidget {
       routes: {
         HomeScreen.routeName : (context) => const HomeScreen(),
       },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale('en'),
     );
   }
 }
