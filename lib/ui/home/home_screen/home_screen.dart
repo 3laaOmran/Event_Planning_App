@@ -18,10 +18,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
   List<Widget> tabs = [
-    HomeTab(),
-    MapTab(),
-    FavoriteTab(),
-    ProfileTab(),
+    const HomeTab(),
+    const MapTab(),
+    const FavoriteTab(),
+    const ProfileTab(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,16 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 45,
           color: AppColors.whiteColor,
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        padding: EdgeInsets.zero,
         color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         child: BottomNavigationBar(
             onTap: (index) {
               setState(() {

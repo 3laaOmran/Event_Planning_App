@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter_native_splash: ^2.4.3
+  provider: ^6.1.2
   google_fonts: ^6.2.1
   flutter:
     sdk: flutter
