@@ -4,5 +4,10 @@
 "english" : "English",
 "arabic" : "Arabic",
 "light" : "Light",
-"dark" : "Dark"
+"dark" : "Dark",
+"home" : "Home",
+"map" : "Map",
+"favorite" : "Favorite",
+"profile" : "Profile",
+"logout" : "Logout"
 }
