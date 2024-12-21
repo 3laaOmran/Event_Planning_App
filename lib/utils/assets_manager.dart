@@ -19,4 +19,6 @@ class AssetsManager {
   static const String onboardingThreeDark = 'assets/images/onboarding_three_dark.png';
   static const String forgetPasswordImage = 'assets/images/forget_password_image.png';
   static const String routeImage = 'assets/images/route_image.png';
+  static const String arabicFlag = 'assets/images/ar_flag.png';
+  static const String englishFlag = 'assets/images/en_flag.png';
 }

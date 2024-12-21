@@ -4,6 +4,7 @@ import 'package:evently_app/ui/home/tabs/profile_tab/widgets/change_theme_bottom
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/text_styles.dart';
+import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -45,18 +46,21 @@ class ProfileTab extends StatelessWidget {
             SizedBox(
               width: width * 0.03,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '3laa Omran',
-                  style: TextStyles.bold24White,
-                ),
-                Text(
-                  '3laaomran1102002@gmail.com',
-                  style: TextStyles.medium16White,
-                )
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '3laa Omran',
+                    style: TextStyles.bold24White,
+                  ),
+                  Text(
+                    overflow: TextOverflow.ellipsis,
+                    '3laaomran1102002@gmail.com',
+                    style: TextStyles.medium16White,
+                  )
+                ],
+              ),
             )
           ],
         ),
@@ -160,17 +164,11 @@ class ProfileTab extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  backgroundColor: AppColors.redColor,
-                ),
-                onPressed: () {},
-                child: Row(
-                  children: [
+            CustomElevatedButton(
+              onPressed: () {},
+              bgColor: AppColors.redColor,
+              buttonText: Row(
+                children: [
                     const Padding(
                       padding: EdgeInsets.only(right: 8.0),
                       child: Icon(
@@ -186,7 +184,8 @@ class ProfileTab extends StatelessWidget {
                       style: TextStyles.regular20White,
                     ),
                   ],
-                )),
+              ),
+            ),
             SizedBox(
               height: height * 0.02,
             ),

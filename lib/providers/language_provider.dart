@@ -10,4 +10,13 @@ class LanguageProvider extends ChangeNotifier {
     appLanguage = newLanguage;
     notifyListeners();
   }
+
+  void switchLanguages() {
+    if (appLanguage == 'en') {
+      appLanguage = 'ar';
+    } else {
+      appLanguage = 'en';
+    }
+    notifyListeners();
+  }
 }
