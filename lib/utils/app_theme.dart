@@ -32,6 +32,10 @@ class AppTheme {
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.primaryDark,
       ),
+      appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(
+        color: AppColors.primaryLight,
+      )),
       scaffoldBackgroundColor: AppColors.primaryDark,
       primaryColor: AppColors.primaryDark,
       floatingActionButtonTheme: const FloatingActionButtonThemeData(

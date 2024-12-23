@@ -18,5 +18,19 @@
 "onboardingTwoContent" : "Take the hassle out of organizing events with our all-in-one planning tools. From setting up invites and managing RSVPs to scheduling reminders and coordinating details, we’ve got you covered. Plan with ease and focus on what matters – creating an unforgettable experience for you and your guests.",
 "onboardingThreeTitle" : "Connect with Friends & Share Moments",
 "onboardingThreeContent" : "Make every event memorable by sharing the experience with others. Our platform lets you invite friends, keep everyone in the loop, and celebrate moments together. Capture and share the excitement with your network, so you can relive the highlights and cherish the memories.",
-"letsStart" : "Let’s Start"
+"letsStart" : "Let’s Start",
+"email" : "Email",
+"password" : "Password",
+"forget_password" : "Forget Password ?",
+"forget_password_bar" : "Forget Password",
+"login" : "Login",
+"do_not_have_account" : "Don't Have Account ?",
+"create_account" : "Create Account",
+"or" : "Or",
+"login_with_google" : "Login With Google",
+"name" : "Name",
+"re_password" : "Re Password",
+"already_have_account" : "Already Have Account ?",
+"register" : "Register",
+"reset_password" : "Reset Password"
 }
