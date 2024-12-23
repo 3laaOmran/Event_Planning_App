@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
-      bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.whiteColor,
       ),
+      scaffoldBackgroundColor: AppColors.whiteColor,
       primaryColor: AppColors.primaryLight,
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.primaryLight,
@@ -28,7 +29,7 @@ class AppTheme {
   ///**********************************************************
 
   static final ThemeData darkTheme = ThemeData(
-      bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.primaryDark,
       ),
       scaffoldBackgroundColor: AppColors.primaryDark,

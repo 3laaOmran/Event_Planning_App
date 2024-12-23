@@ -23,9 +23,14 @@ class ProfileTab extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: height * 0.2,
         backgroundColor: AppColors.primaryLight,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(64),
+            bottomLeft: languageProvider.appLanguage == 'en'
+                ? const Radius.circular(64)
+                : Radius.zero,
+            bottomRight: languageProvider.appLanguage == 'ar'
+                ? const Radius.circular(64)
+                : Radius.zero,
           ),
         ),
         title: Row(
