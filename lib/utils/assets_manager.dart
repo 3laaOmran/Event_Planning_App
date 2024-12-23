@@ -21,4 +21,8 @@ class AssetsManager {
   static const String routeImage = 'assets/images/route_image.png';
   static const String arabicFlag = 'assets/images/ar_flag.png';
   static const String englishFlag = 'assets/images/en_flag.png';
+  static const String emailIcon = 'assets/images/email_icon.png';
+  static const String passwordIcon = 'assets/images/password_icon.png';
+  static const String nameIcon = 'assets/images/name_icon.png';
+  static const String googleIcon = 'assets/images/google_icon.png';
 }

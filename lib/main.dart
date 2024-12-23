@@ -1,4 +1,6 @@
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
+import 'package:evently_app/ui/auth/register/register_screen.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/onboarding/intro_screen.dart';
 import 'package:evently_app/utils/app_theme.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/language_provider.dart';
+import 'ui/auth/forget_password/forget_password_screen.dart';
 import 'ui/onboarding/onboarding_screen.dart';
 
 void main(){
@@ -30,6 +33,10 @@ class EventlyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: IntroScreen.routeName,
       routes: {
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        ForgetPasswordScreen.routeName: (context) =>
+            const ForgetPasswordScreen(),
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
         IntroScreen.routeName: (context) => const IntroScreen(),
         OnboardingScreen.routeName: (context) => const OnboardingScreen(),
         HomeScreen.routeName : (context) => const HomeScreen(),

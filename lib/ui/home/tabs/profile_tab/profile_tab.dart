@@ -172,6 +172,7 @@ class ProfileTab extends StatelessWidget {
             CustomElevatedButton(
               onPressed: () {},
               bgColor: AppColors.redColor,
+              border: BorderSide.none,
               buttonText: Row(
                 children: [
                     const Padding(

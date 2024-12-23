@@ -1,5 +1,5 @@
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/ui/home/home_screen/home_screen.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/text_styles.dart';
@@ -125,7 +125,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onPressed: () {
                       currentPageIndex == pages.length - 1
                           ? Navigator.pushReplacementNamed(
-                              context, HomeScreen.routeName)
+                              context, LoginScreen.routeName)
                           : pageController.nextPage(
                               duration: const Duration(milliseconds: 200),
                               curve: Curves.easeIn);
