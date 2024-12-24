@@ -50,7 +50,7 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/images/app_icon.png"
-  adaptive_icon_background: "#000000"
+  adaptive_icon_background: "#006AFE"
   adaptive_icon_foreground: "assets/images/app_icon.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
