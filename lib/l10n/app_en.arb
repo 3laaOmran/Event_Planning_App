@@ -32,5 +32,17 @@
 "re_password" : "Re Password",
 "already_have_account" : "Already Have Account ?",
 "register" : "Register",
-"reset_password" : "Reset Password"
+"reset_password" : "Reset Password",
+"welcome_back" : "Welcome Back ✨",
+"all" : "All",
+"sport" : "Sport",
+"birthday" : "Birthday",
+"book" : "Book Club",
+"holiday" : "Holiday",
+"meeting" : "Meeting",
+"eating" : "Eating",
+"work_shop" : "Work Shop",
+"gaming" : "Gaming",
+"exhibition" : "Exhibition",
+"search_for_event" : "Search for Event"
 }
