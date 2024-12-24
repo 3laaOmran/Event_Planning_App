@@ -25,4 +25,14 @@ class AssetsManager {
   static const String passwordIcon = 'assets/images/password_icon.png';
   static const String nameIcon = 'assets/images/name_icon.png';
   static const String googleIcon = 'assets/images/google_icon.png';
+  static const String birthdayImage = 'assets/images/birthday_image.png';
+  static const String bookClubImage = 'assets/images/book_club_image.png';
+  static const String eatingImage = 'assets/images/eating_image.png';
+  static const String exhibitionImage = 'assets/images/exhibition_image.png';
+  static const String gamingImage = 'assets/images/gaming_image.png';
+  static const String holidayImage = 'assets/images/holiday_image.png';
+  static const String meetingImage = 'assets/images/meeting_image.png';
+  static const String searchIcon = 'assets/images/search_icon.png';
+  static const String sportImage = 'assets/images/sport_image.png';
+  static const String workShopImage = 'assets/images/work_shop_image.png';
 }
