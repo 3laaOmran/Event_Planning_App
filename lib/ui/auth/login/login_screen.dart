@@ -163,6 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {}),
               SizedBox(height: height * 0.02),
               const SwitchLanguageButton(),
+              SizedBox(height: height * 0.05),
             ],
           ),
         ),

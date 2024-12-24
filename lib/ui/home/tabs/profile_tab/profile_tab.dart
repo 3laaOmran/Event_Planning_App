@@ -87,7 +87,6 @@ class ProfileTab extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
-                    // backgroundColor: themeProvider.isDark()?AppColors.primaryDark:AppColors.whiteColor,
                     constraints: BoxConstraints(
                       maxHeight: height * 0.25,
                     ),
@@ -135,7 +134,6 @@ class ProfileTab extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
-                    // backgroundColor: themeProvider.isDark()?AppColors.primaryDark:AppColors.whiteColor,
                     constraints: BoxConstraints(
                       maxHeight: height * 0.25,
                     ),

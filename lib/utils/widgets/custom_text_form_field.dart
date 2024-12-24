@@ -11,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? prefixIcon;
   final bool? isObscure;
   final TextEditingController controller;
+  final Color? borderColor;
 
   const CustomTextFormField(
       {super.key,
@@ -19,7 +20,7 @@ class CustomTextFormField extends StatelessWidget {
       this.suffixIcon,
       this.prefixIcon,
       this.isObscure,
-      required this.controller});
+        required this.controller, this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,9 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
             width: 1,
-            color: themeProvider.isDark()
+            color: borderColor == null ? themeProvider.isDark()
                 ? AppColors.whiteColor
-                : AppColors.greyColor,
+                : AppColors.greyColor : borderColor!,
           ),
         ),
         focusedBorder: OutlineInputBorder(
