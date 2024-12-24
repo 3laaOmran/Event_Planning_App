@@ -31,7 +31,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             ? AppColors.primaryDark
             : AppColors.whiteColor,
         title: Text(
-          AppLocalizations.of(context)!.register,
+          AppLocalizations.of(context)!.forget_password_bar,
           style: themeProvider.isDark()
               ? TextStyles.regular22primaryLight
               : TextStyles.regular22black,

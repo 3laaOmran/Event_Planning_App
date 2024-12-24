@@ -18,6 +18,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -48,7 +49,6 @@ class _HomeTabState extends State<HomeTab> {
       Icons.work_outline_sharp,
       Icons.holiday_village_outlined,
     ];
-    int selectedIndex = 0;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: themeProvider.isDark()

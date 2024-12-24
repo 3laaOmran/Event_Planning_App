@@ -4,6 +4,7 @@ import 'package:evently_app/ui/auth/register/register_screen.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/onboarding/intro_screen.dart';
 import 'package:evently_app/utils/app_theme.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,9 @@ import 'providers/language_provider.dart';
 import 'ui/auth/forget_password/forget_password_screen.dart';
 import 'ui/onboarding/onboarding_screen.dart';
 
-void main(){
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CashHelper.init();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => LanguageProvider()),
     ChangeNotifierProvider(create: (context) => ThemeProvider()),
