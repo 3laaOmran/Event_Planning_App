@@ -143,6 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ])),
               SizedBox(height: height * 0.02),
               const SwitchLanguageButton(),
+              SizedBox(height: height * 0.05),
             ],
           ),
         ),
