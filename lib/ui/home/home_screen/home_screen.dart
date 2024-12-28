@@ -1,4 +1,5 @@
 import 'package:evently_app/ui/home/tabs/favorite_tab/favorite_tab.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/add_event.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/home_tab.dart';
 import 'package:evently_app/ui/home/tabs/map_tab/map_tab.dart';
 import 'package:evently_app/ui/home/tabs/profile_tab/profile_tab.dart';
@@ -29,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: tabs[currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, AddEvent.routeName);
+        },
         child: const Icon(
           Icons.add,
           size: 45,

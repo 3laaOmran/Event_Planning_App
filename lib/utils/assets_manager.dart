@@ -35,4 +35,8 @@ class AssetsManager {
   static const String searchIcon = 'assets/images/search_icon.png';
   static const String sportImage = 'assets/images/sport_image.png';
   static const String workShopImage = 'assets/images/work_shop_image.png';
+  static const String eventDateIcon = 'assets/images/event_date_icon.png';
+  static const String eventTimeIcon = 'assets/images/event_time_icon.png';
+  static const String eventTitleIcon = 'assets/images/event_title_icon.png';
+  static const String locationIcon = 'assets/images/location_icon.png';
 }

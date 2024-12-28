@@ -44,5 +44,20 @@
 "work_shop" : "Work Shop",
 "gaming" : "Gaming",
 "exhibition" : "Exhibition",
-"search_for_event" : "Search for Event"
+"search_for_event" : "Search for Event",
+"create_event" : "Create Event",
+"title" : "Title",
+"event_title" : "Event Title",
+"description" : "Description",
+"event_description" : "Event Description",
+"event_date" : "Event Date",
+"choose_date" : "Choose Date",
+"event_time" : "Event Time",
+"choose_time" : "Choose Time",
+"location" : "Location",
+"choose_location" : "Choose Event Location",
+"add_event" : "Add Event",
+"event_title_validation" : "Please Enter Event Title",
+"event_description_validation" : "Please Enter Event Description",
+"event_date_time_validation" : "Please Choose Event Date && Time"
 }

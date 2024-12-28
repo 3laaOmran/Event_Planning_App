@@ -8,12 +8,15 @@ class TabBarWidget extends StatelessWidget {
   final String tabName;
   final IconData tabIcon;
   final bool isSelected;
+  final bool? inListView;
 
-  const TabBarWidget(
-      {super.key,
-      required this.tabName,
-      required this.isSelected,
-      required this.tabIcon});
+  const TabBarWidget({
+    super.key,
+    required this.tabName,
+    required this.isSelected,
+    required this.tabIcon,
+    this.inListView,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +29,42 @@ class TabBarWidget extends StatelessWidget {
       decoration: BoxDecoration(
           color: themeProvider.isDark()
               ? isSelected
-                  ? AppColors.primaryLight
+                  ? inListView == null
+                      ? AppColors.primaryLight
+                      : AppColors.primaryLight
                   : AppColors.transparent
               : isSelected
-                  ? AppColors.whiteColor
+                  ? inListView == null
+                      ? AppColors.whiteColor
+                      : AppColors.primaryLight
                   : AppColors.transparent,
           borderRadius: BorderRadius.circular(46),
           border: Border.all(
-            width: 1,
-            color: themeProvider.isDark()
-                ? AppColors.primaryLight
-                : AppColors.whiteColor,
-          )),
+              width: 1,
+              color: themeProvider.isDark()
+                  ? inListView == null
+                      ? AppColors.primaryLight
+                      : AppColors.primaryLight
+                  : inListView == null
+                      ? AppColors.whiteColor
+                      : AppColors.primaryLight)),
       child: Row(
         children: [
           Icon(
             tabIcon,
             color: themeProvider.isDark()
-                ? AppColors.whiteColor
+                ? inListView == null
+                    ? AppColors.whiteColor
+                    : isSelected
+                        ? AppColors.whiteColor
+                        : AppColors.primaryLight
                 : isSelected
-                    ? AppColors.primaryLight
-                    : AppColors.whiteColor,
+                    ? inListView == null
+                        ? AppColors.primaryLight
+                        : AppColors.whiteColor
+                    : inListView == null
+                        ? AppColors.whiteColor
+                        : AppColors.primaryLight,
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.02,
@@ -54,10 +72,18 @@ class TabBarWidget extends StatelessWidget {
           Text(
             tabName,
             style: themeProvider.isDark()
-                ? TextStyles.medium16White
+                ? inListView == null
+                    ? TextStyles.medium16White
+                    : isSelected
+                        ? TextStyles.medium16White
+                        : TextStyles.medium16primaryLight
                 : isSelected
-                    ? TextStyles.medium16primaryLight
-                    : TextStyles.medium16White,
+                    ? inListView == null
+                        ? TextStyles.medium16primaryLight
+                        : TextStyles.medium16White
+                    : inListView == null
+                        ? TextStyles.medium16White
+                        : TextStyles.medium20primaryLight,
           ),
         ],
       ),
