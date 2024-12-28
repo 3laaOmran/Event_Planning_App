@@ -4,6 +4,8 @@ import 'package:evently_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+typedef validation = String? Function(String?)?;
+
 class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final TextStyle? hintStyle;
@@ -12,6 +14,8 @@ class CustomTextFormField extends StatelessWidget {
   final bool? isObscure;
   final TextEditingController controller;
   final Color? borderColor;
+  final int? maxLines;
+  final validation validator;
 
   const CustomTextFormField(
       {super.key,
@@ -20,12 +24,17 @@ class CustomTextFormField extends StatelessWidget {
       this.suffixIcon,
       this.prefixIcon,
       this.isObscure,
-        required this.controller, this.borderColor});
+      required this.controller,
+      this.borderColor,
+      this.maxLines,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
     return TextFormField(
+      validator: validator,
+      maxLines: maxLines ?? 1,
       obscureText: isObscure ?? false,
       controller: controller,
       style: themeProvider.isDark()
