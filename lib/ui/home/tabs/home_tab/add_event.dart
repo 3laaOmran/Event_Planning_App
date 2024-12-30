@@ -5,12 +5,15 @@ import 'package:evently_app/ui/home/tabs/home_tab/widget/date_time_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +28,13 @@ class AddEvent extends StatefulWidget {
 
 class _AddEventState extends State<AddEvent> {
   int selectedItem = 0;
-  String? selectedDate;
+  DateTime? selectedDate;
   String? selectedTime;
   var eventTitleController = TextEditingController();
   var eventDescriptionController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  String selectedImage = '';
+  String selectedEventType = '';
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +75,8 @@ class _AddEventState extends State<AddEvent> {
       AssetsManager.workShopImage,
       AssetsManager.holidayImage,
     ];
+    selectedImage = imagesList[selectedItem];
+    selectedEventType = tabSNameList[selectedItem];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: themeProvider.isDark()
@@ -177,15 +184,14 @@ class _AddEventState extends State<AddEvent> {
                   height: height * 0.02,
                 ),
                 DateTimeWidget(
-                  lang: languageProvider.appLanguage,
-                  isDark: themeProvider.isDark(),
-                  onChoosePressed: chooseDate,
-                  imageIcon: AssetsManager.eventDateIcon,
-                  title: AppLocalizations.of(context)!.event_date,
-                  choose: selectedDate == null
-                      ? AppLocalizations.of(context)!.choose_date
-                      : selectedDate!,
-                ),
+                    lang: languageProvider.appLanguage,
+                    isDark: themeProvider.isDark(),
+                    onChoosePressed: chooseDate,
+                    imageIcon: AssetsManager.eventDateIcon,
+                    title: AppLocalizations.of(context)!.event_date,
+                    choose: selectedDate == null
+                        ? AppLocalizations.of(context)!.choose_date
+                        : DateFormat('dd/MM/yyyy').format(selectedDate!)),
                 SizedBox(
                   height: height * 0.01,
                 ),
@@ -241,8 +247,24 @@ class _AddEventState extends State<AddEvent> {
                             ),
                           );
                         } else {
-                          ///TODO: Add Event
-                          Navigator.pop(context);
+                          EventModel event = EventModel(
+                              image: selectedImage,
+                              eventType: selectedEventType,
+                              title: eventTitleController.text,
+                              description: eventDescriptionController.text,
+                              dateTime: selectedDate!,
+                              time: selectedTime!);
+                          FirebaseUtils.addEventToFireStore(event).timeout(
+                              Duration(milliseconds: 500), onTimeout: () {
+                            Fluttertoast.showToast(
+                                msg: "Event Added Successfully",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: AppColors.greenColor,
+                                textColor: AppColors.whiteColor,
+                                fontSize: 20.0);
+                            Navigator.pop(context);
+                          });
                         }
                       }
                     }),
@@ -296,7 +318,7 @@ class _AddEventState extends State<AddEvent> {
         );
       },
     );
-    selectedDate = DateFormat('dd/MM/yyyy').format(date!);
+    selectedDate = date;
     setState(() {});
   }
 
