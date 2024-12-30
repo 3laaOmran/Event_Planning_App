@@ -39,4 +39,7 @@ class AssetsManager {
   static const String eventTimeIcon = 'assets/images/event_time_icon.png';
   static const String eventTitleIcon = 'assets/images/event_title_icon.png';
   static const String locationIcon = 'assets/images/location_icon.png';
+  static const String editImage = 'assets/images/edit_image.png';
+  static const String deleteImage = 'assets/images/delete_image.png';
+  static const String mapImage = 'assets/images/map_Image.png';
 }

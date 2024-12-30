@@ -1,6 +1,7 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -173,9 +174,16 @@ class _HomeTabState extends State<HomeTab> {
                       vertical: height * 0.01,
                     ),
                     itemCount: eventListProvider.filteredEventsList.length,
-                    itemBuilder: (context, index) => EventItem(
-                          eventModel:
-                              eventListProvider.filteredEventsList[index],
+                    itemBuilder: (context, index) => InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, EventDetails.routeName,
+                                arguments: eventListProvider
+                                    .filteredEventsList[index]);
+                          },
+                          child: EventItem(
+                            eventModel:
+                                eventListProvider.filteredEventsList[index],
+                          ),
                         )),
           ),
         ],
