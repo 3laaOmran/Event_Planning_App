@@ -1,3 +1,4 @@
+import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
@@ -40,6 +41,7 @@ class _AddEventState extends State<AddEvent> {
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
+    var eventListProvider = Provider.of<EventListProvider>(context);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     List<String> tabSNameList = [
@@ -248,6 +250,7 @@ class _AddEventState extends State<AddEvent> {
                           );
                         } else {
                           EventModel event = EventModel(
+                              // isFavorite: false,
                               image: selectedImage,
                               eventType: selectedEventType,
                               title: eventTitleController.text,
@@ -256,6 +259,7 @@ class _AddEventState extends State<AddEvent> {
                               time: selectedTime!);
                           FirebaseUtils.addEventToFireStore(event).timeout(
                               Duration(milliseconds: 500), onTimeout: () {
+                            eventListProvider.getAllEvents();
                             Fluttertoast.showToast(
                                 msg: "Event Added Successfully",
                                 toastLength: Toast.LENGTH_SHORT,

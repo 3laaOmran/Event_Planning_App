@@ -59,5 +59,7 @@
 "add_event" : "اضافة الحدث",
 "event_title_validation" : "الرجاء إدخال عنوان الحدث",
 "event_description_validation" : "الرجاء إدخال وصف الحدث",
-"event_date_time_validation" : "الرجاء اختيار وقت وتاريخ الحدث"
+"event_date_time_validation" : "الرجاء اختيار وقت وتاريخ الحدث",
+"no_events" : "لا يوجد اي احداث اضف الان",
+"no_fav_events" : "لا توجد احداث مفضله"
 }
