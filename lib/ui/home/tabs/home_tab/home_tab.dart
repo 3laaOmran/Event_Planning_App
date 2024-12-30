@@ -1,6 +1,7 @@
+import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/ui/home/tabs/home_tab/widget/home_tab_body.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
@@ -18,25 +19,18 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    var eventListProvider = Provider.of<EventListProvider>(context);
+    eventListProvider.getTabsNameList(context);
+    if (eventListProvider.eventsList.isEmpty) {
+      eventListProvider.getAllEvents();
+    }
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
-    List<String> tabSNameList = [
-      AppLocalizations.of(context)!.all,
-      AppLocalizations.of(context)!.sport,
-      AppLocalizations.of(context)!.birthday,
-      AppLocalizations.of(context)!.book,
-      AppLocalizations.of(context)!.meeting,
-      AppLocalizations.of(context)!.eating,
-      AppLocalizations.of(context)!.exhibition,
-      AppLocalizations.of(context)!.gaming,
-      AppLocalizations.of(context)!.work_shop,
-      AppLocalizations.of(context)!.holiday,
-    ];
+
     List<IconData> iconsName = [
       CupertinoIcons.compass,
       Icons.directions_bike_outlined,
@@ -133,7 +127,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 SizedBox(height: height * 0.02),
                 DefaultTabController(
-                  length: tabSNameList.length,
+                  length: eventListProvider.tabSNameList.length,
                   child: TabBar(
                     padding: EdgeInsetsDirectional.only(start: width * 0.03),
                     tabAlignment: TabAlignment.start,
@@ -142,16 +136,16 @@ class _HomeTabState extends State<HomeTab> {
                     labelPadding:
                         EdgeInsets.symmetric(horizontal: width * 0.015),
                     onTap: (index) {
-                      selectedIndex = index;
-                      setState(() {});
+                      eventListProvider.changeSelectedIndex(index);
                     },
                     indicatorColor: AppColors.transparent,
-                    tabs: tabSNameList.map((tabName) {
+                    tabs: eventListProvider.tabSNameList.map((tabName) {
                       return TabBarWidget(
-                        tabIcon: iconsName[tabSNameList.indexOf(tabName)],
+                        tabIcon: iconsName[
+                            eventListProvider.tabSNameList.indexOf(tabName)],
                         tabName: tabName,
-                        isSelected:
-                            selectedIndex == tabSNameList.indexOf(tabName),
+                        isSelected: eventListProvider.selectedIndex ==
+                            eventListProvider.tabSNameList.indexOf(tabName),
                       );
                     }).toList(),
                   ),
@@ -159,7 +153,31 @@ class _HomeTabState extends State<HomeTab> {
               ],
             ),
           ),
-          const HomeTabBody(),
+          Expanded(
+            child: eventListProvider.filteredEventsList.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(AssetsManager.onboardingTwoDark),
+                        SizedBox(height: height * 0.02),
+                        Text(
+                          AppLocalizations.of(context)!.no_events,
+                          style: TextStyles.bold20PrimaryLight,
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(
+                      vertical: height * 0.01,
+                    ),
+                    itemCount: eventListProvider.filteredEventsList.length,
+                    itemBuilder: (context, index) => EventItem(
+                          eventModel:
+                              eventListProvider.filteredEventsList[index],
+                        )),
+          ),
         ],
       ),
     );

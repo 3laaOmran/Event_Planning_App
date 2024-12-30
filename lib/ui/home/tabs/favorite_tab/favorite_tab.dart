@@ -1,10 +1,12 @@
-import 'package:evently_app/ui/home/tabs/home_tab/widget/home_tab_body.dart';
+import 'package:evently_app/providers/event_list_provider.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteTab extends StatelessWidget {
   const FavoriteTab({super.key});
@@ -14,6 +16,10 @@ class FavoriteTab extends StatelessWidget {
     var searchController = TextEditingController();
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var eventListProvider = Provider.of<EventListProvider>(context);
+    if (eventListProvider.favoriteEvents.isEmpty) {
+      eventListProvider.getFavoriteEvents();
+    }
     return Column(
       children: [
         SizedBox(
@@ -28,7 +34,27 @@ class FavoriteTab extends StatelessWidget {
               borderColor: AppColors.primaryLight,
               controller: searchController),
         ),
-        const HomeTabBody(),
+        Expanded(
+          child: eventListProvider.favoriteEvents.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(AssetsManager.onboardingOneDark),
+                      Text(
+                        AppLocalizations.of(context)!.no_fav_events,
+                        style: TextStyles.bold20PrimaryLight,
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: eventListProvider.favoriteEvents.length,
+                  itemBuilder: (context, index) => EventItem(
+                    eventModel: eventListProvider.favoriteEvents[index],
+                  ),
+                ),
+        ),
       ],
     );
   }
