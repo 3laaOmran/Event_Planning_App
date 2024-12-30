@@ -1,11 +1,12 @@
 import 'package:evently_app/utils/app_colors.dart';
-import 'package:evently_app/utils/assets_manager.dart';
-import 'package:evently_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChooseLocationWidget extends StatelessWidget {
-  const ChooseLocationWidget({super.key});
+  final String image;
+  final Widget text;
+
+  const ChooseLocationWidget(
+      {super.key, required this.image, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +29,15 @@ class ChooseLocationWidget extends StatelessWidget {
             decoration: BoxDecoration(
                 color: AppColors.primaryLight,
                 borderRadius: BorderRadius.circular(8)),
-            child: Image.asset(AssetsManager.locationIcon),
+            child: ImageIcon(
+              AssetImage(image),
+              color: AppColors.whiteColor,
+            ),
           ),
           SizedBox(
             width: width * .02,
           ),
-          Expanded(
-              child: Text(
-            AppLocalizations.of(context)!.choose_location,
-            style: TextStyles.medium16primaryLight,
-          )),
-          Icon(
-            Icons.arrow_forward_ios,
-            color: AppColors.primaryLight,
-            size: 20,
-          ),
+          text,
         ],
       ),
     );

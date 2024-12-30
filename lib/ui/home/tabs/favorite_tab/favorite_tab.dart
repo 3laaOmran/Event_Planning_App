@@ -1,4 +1,5 @@
 import 'package:evently_app/providers/event_list_provider.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
@@ -50,8 +51,14 @@ class FavoriteTab extends StatelessWidget {
                 )
               : ListView.builder(
                   itemCount: eventListProvider.favoriteEvents.length,
-                  itemBuilder: (context, index) => EventItem(
-                    eventModel: eventListProvider.favoriteEvents[index],
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, EventDetails.routeName,
+                          arguments: eventListProvider.favoriteEvents[index]);
+                    },
+                    child: EventItem(
+                      eventModel: eventListProvider.favoriteEvents[index],
+                    ),
                   ),
                 ),
         ),

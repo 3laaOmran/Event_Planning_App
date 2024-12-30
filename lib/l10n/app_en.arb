@@ -61,5 +61,6 @@
 "event_description_validation" : "Please Enter Event Description",
 "event_date_time_validation" : "Please Choose Event Date && Time",
 "no_events" : "No Events Yet Try Add Some",
-"no_fav_events" : "No Favorite Events Yet"
+"no_fav_events" : "No Favorite Events Yet",
+"event_details" : "Event Details"
 }

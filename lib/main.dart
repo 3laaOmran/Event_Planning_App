@@ -5,6 +5,7 @@ import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/auth/register/register_screen.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/add_event.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/onboarding/intro_screen.dart';
 import 'package:evently_app/utils/app_theme.dart';
 import 'package:evently_app/utils/helpers/cash_helper.dart';
@@ -44,9 +45,10 @@ class EventlyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.appTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: IntroScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: {
         AddEvent.routeName: (context) => const AddEvent(),
+        EventDetails.routeName: (context) => const EventDetails(),
         LoginScreen.routeName: (context) => const LoginScreen(),
         ForgetPasswordScreen.routeName: (context) =>
             const ForgetPasswordScreen(),

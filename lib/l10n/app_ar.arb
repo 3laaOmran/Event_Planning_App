@@ -61,5 +61,7 @@
 "event_description_validation" : "الرجاء إدخال وصف الحدث",
 "event_date_time_validation" : "الرجاء اختيار وقت وتاريخ الحدث",
 "no_events" : "لا يوجد اي احداث اضف الان",
-"no_fav_events" : "لا توجد احداث مفضله"
+"no_fav_events" : "لا توجد احداث مفضله",
+"event_details" : "تفاصيل الحدث"
+
 }

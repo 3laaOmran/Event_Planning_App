@@ -219,7 +219,25 @@ class _AddEventState extends State<AddEvent> {
                 SizedBox(
                   height: height * 0.01,
                 ),
-                ChooseLocationWidget(),
+                ChooseLocationWidget(
+                  image: AssetsManager.locationIcon,
+                  text: Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Text(
+                          AppLocalizations.of(context)!.choose_location,
+                          style: TextStyles.medium16primaryLight,
+                        )),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: AppColors.primaryLight,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: height * 0.02,
                 ),
