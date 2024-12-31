@@ -1,4 +1,6 @@
+import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
@@ -17,6 +19,7 @@ class EventDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
+    var eventListProvider = Provider.of<EventListProvider>(context);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var args = ModalRoute.of(context)!.settings.arguments as EventModel;
@@ -37,7 +40,56 @@ class EventDetails extends StatelessWidget {
           Image.asset(AssetsManager.editImage),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-            child: Image.asset(AssetsManager.deleteImage),
+            child: InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          actionsAlignment: MainAxisAlignment.center,
+                          backgroundColor: themeProvider.isDark()
+                              ? AppColors.primaryDark
+                              : AppColors.whiteColor,
+                          title: Text(
+                            'Delete Event.',
+                            textAlign: TextAlign.center,
+                            style: TextStyles.bold20PrimaryLight,
+                          ),
+                          content: Text(
+                            'Delete event permanently?!!',
+                            style: themeProvider.isDark()
+                                ? TextStyles.medium16White
+                                : TextStyles.medium16black,
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryLight),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel',
+                                  style: TextStyles.medium14White),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryLight),
+                              onPressed: () {
+                                eventListProvider.deleteEvent(args.id);
+                                Navigator.popUntil(
+                                  context,
+                                  ModalRoute.withName(HomeScreen.routeName),
+                                );
+                                // Navigator.popUntil(context, (route) => route.settings.name == HomeScreen.routeName,);
+                              },
+                              child: Text('Delete',
+                                  style: TextStyles.medium14White),
+                            ),
+                          ],
+                        );
+                      });
+                },
+                child: Image.asset(AssetsManager.deleteImage)),
           ),
         ],
       ),
