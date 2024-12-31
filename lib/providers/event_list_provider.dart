@@ -92,4 +92,13 @@ class EventListProvider extends ChangeNotifier {
     // print('fav7');
     notifyListeners();
   }
+
+  Future<void> deleteEvent(String docId) async {
+    var collection = await FirebaseUtils.getEventCollection();
+    await collection.doc(docId).delete().timeout(Duration(milliseconds: 500),
+        onTimeout: () {
+      selectedIndex == 0 ? getAllEvents() : getFilteredEvents();
+      getFavoriteEvents();
+    });
+  }
 }
