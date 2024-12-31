@@ -2,6 +2,7 @@ import 'package:evently_app/providers/theme_provider.dart';
 import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_floating_action_button.dart';
 import 'package:flutter/material.dart';
@@ -123,12 +124,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     heroTag: 'next',
                     icon: Icons.arrow_forward,
                     onPressed: () {
-                      currentPageIndex == pages.length - 1
-                          ? Navigator.pushReplacementNamed(
-                              context, LoginScreen.routeName)
-                          : pageController.nextPage(
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeIn);
+                      if (currentPageIndex == pages.length - 1) {
+                        Navigator.pushReplacementNamed(
+                            context, LoginScreen.routeName);
+                        CashHelper.saveData(key: 'onboarding', value: true);
+                      } else {
+                        pageController.nextPage(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeIn);
+                      }
                     }),
               ],
             )

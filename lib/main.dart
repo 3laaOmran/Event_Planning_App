@@ -26,15 +26,27 @@ void main() async {
   );
   await CashHelper.init();
   await FirebaseFirestore.instance.disableNetwork();
+  bool? onboarding = CashHelper.getData(key: 'onboarding');
+  String initialRoute;
+  if (onboarding != null) {
+    initialRoute = LoginScreen.routeName;
+  } else {
+    initialRoute = IntroScreen.routeName;
+  }
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => LanguageProvider()),
     ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ChangeNotifierProvider(create: (context) => EventListProvider()),
-  ], child: const EventlyApp()));
+      ],
+      child: EventlyApp(
+        initialRoute: initialRoute,
+      )));
 }
 
 class EventlyApp extends StatelessWidget {
-  const EventlyApp({super.key});
+  final String initialRoute;
+
+  const EventlyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +57,7 @@ class EventlyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.appTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: HomeScreen.routeName,
+      initialRoute: initialRoute,
       routes: {
         AddEvent.routeName: (context) => const AddEvent(),
         EventDetails.routeName: (context) => const EventDetails(),
