@@ -66,18 +66,8 @@ class _AddEventState extends State<AddEvent> {
       Icons.work_outline_sharp,
       Icons.holiday_village_outlined,
     ];
-    List<String> imagesList = [
-      AssetsManager.sportImage,
-      AssetsManager.birthdayImage,
-      AssetsManager.bookClubImage,
-      AssetsManager.meetingImage,
-      AssetsManager.eatingImage,
-      AssetsManager.exhibitionImage,
-      AssetsManager.gamingImage,
-      AssetsManager.workShopImage,
-      AssetsManager.holidayImage,
-    ];
-    selectedImage = imagesList[selectedItem];
+
+    selectedImage = eventListProvider.imagesList[selectedItem];
     selectedEventType = tabSNameList[selectedItem];
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +97,7 @@ class _AddEventState extends State<AddEvent> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Image.asset(
-                    imagesList[selectedItem],
+                    eventListProvider.imagesList[selectedItem],
                     height: height * 0.25,
                   ),
                 ),

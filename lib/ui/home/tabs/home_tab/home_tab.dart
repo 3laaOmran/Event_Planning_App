@@ -23,7 +23,7 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
-    eventListProvider.getTabsNameList(context);
+    // eventListProvider.getTabsNameList(context);
     if (eventListProvider.eventsList.isEmpty) {
       eventListProvider.getAllEvents();
     }
@@ -31,6 +31,19 @@ class _HomeTabState extends State<HomeTab> {
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
+
+    List<String> tabSNameList = [
+      AppLocalizations.of(context)!.all,
+      AppLocalizations.of(context)!.sport,
+      AppLocalizations.of(context)!.birthday,
+      AppLocalizations.of(context)!.book,
+      AppLocalizations.of(context)!.meeting,
+      AppLocalizations.of(context)!.eating,
+      AppLocalizations.of(context)!.exhibition,
+      AppLocalizations.of(context)!.gaming,
+      AppLocalizations.of(context)!.work_shop,
+      AppLocalizations.of(context)!.holiday,
+    ];
 
     List<IconData> iconsName = [
       CupertinoIcons.compass,
@@ -128,7 +141,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 SizedBox(height: height * 0.02),
                 DefaultTabController(
-                  length: eventListProvider.tabSNameList.length,
+                  length: tabSNameList.length,
                   child: TabBar(
                     padding: EdgeInsetsDirectional.only(start: width * 0.03),
                     tabAlignment: TabAlignment.start,
@@ -140,13 +153,12 @@ class _HomeTabState extends State<HomeTab> {
                       eventListProvider.changeSelectedIndex(index);
                     },
                     indicatorColor: AppColors.transparent,
-                    tabs: eventListProvider.tabSNameList.map((tabName) {
+                    tabs: tabSNameList.map((tabName) {
                       return TabBarWidget(
-                        tabIcon: iconsName[
-                            eventListProvider.tabSNameList.indexOf(tabName)],
+                        tabIcon: iconsName[tabSNameList.indexOf(tabName)],
                         tabName: tabName,
                         isSelected: eventListProvider.selectedIndex ==
-                            eventListProvider.tabSNameList.indexOf(tabName),
+                            tabSNameList.indexOf(tabName),
                       );
                     }).toList(),
                   ),

@@ -27,6 +27,9 @@ class _FavoriteTabState extends State<FavoriteTab> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var eventListProvider = Provider.of<EventListProvider>(context);
+    if (eventListProvider.favoriteEvents.isEmpty) {
+      eventListProvider.getFavoriteEvents();
+    }
     filteredList = eventListProvider.favoriteEvents.where((event) {
       return event.title.toLowerCase().contains(searchText.toLowerCase());
     }).toList();

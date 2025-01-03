@@ -1,31 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/firebase_utils.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventListProvider extends ChangeNotifier {
   List<EventModel> eventsList = [];
   List<EventModel> filteredEventsList = [];
   int selectedIndex = 0;
 
-  List<String> tabSNameList = [];
-
-  void getTabsNameList(BuildContext context) {
-    tabSNameList = [
-      AppLocalizations.of(context)!.all,
-      AppLocalizations.of(context)!.sport,
-      AppLocalizations.of(context)!.birthday,
-      AppLocalizations.of(context)!.book,
-      AppLocalizations.of(context)!.meeting,
-      AppLocalizations.of(context)!.eating,
-      AppLocalizations.of(context)!.exhibition,
-      AppLocalizations.of(context)!.gaming,
-      AppLocalizations.of(context)!.work_shop,
-      AppLocalizations.of(context)!.holiday,
-    ];
-  }
-
+  // List<String> tabSNameList = [];
+  //
+  // void getTabsNameList(BuildContext context) {
+  //   tabSNameList = [
+  //     AppLocalizations.of(context)!.all,
+  //     AppLocalizations.of(context)!.sport,
+  //     AppLocalizations.of(context)!.birthday,
+  //     AppLocalizations.of(context)!.book,
+  //     AppLocalizations.of(context)!.meeting,
+  //     AppLocalizations.of(context)!.eating,
+  //     AppLocalizations.of(context)!.exhibition,
+  //     AppLocalizations.of(context)!.gaming,
+  //     AppLocalizations.of(context)!.work_shop,
+  //     AppLocalizations.of(context)!.holiday,
+  //   ];
+  // }
+  List<String> imagesList = [
+    AssetsManager.sportImage,
+    AssetsManager.birthdayImage,
+    AssetsManager.bookClubImage,
+    AssetsManager.meetingImage,
+    AssetsManager.eatingImage,
+    AssetsManager.exhibitionImage,
+    AssetsManager.gamingImage,
+    AssetsManager.workShopImage,
+    AssetsManager.holidayImage,
+  ];
   void getAllEvents() async {
     QuerySnapshot<EventModel> querySnapshot =
         await FirebaseUtils.getEventCollection()
@@ -46,10 +56,13 @@ class EventListProvider extends ChangeNotifier {
     eventsList = querySnapshot.docs.map((event) {
       return event.data();
     }).toList();
-
     filteredEventsList = eventsList.where((event) {
-      return event.eventType == tabSNameList[selectedIndex];
+      return event.image == imagesList[selectedIndex - 1];
     }).toList();
+    // sort events
+    // filteredEventsList.sort((event1,event2){
+    //   return event1.dateTime.compareTo(event2.dateTime);
+    // });
     notifyListeners();
   }
 
@@ -89,7 +102,6 @@ class EventListProvider extends ChangeNotifier {
     favoriteEvents = eventsList.where((event) {
       return event.isFavorite == true;
     }).toList();
-    // print('fav7');
     notifyListeners();
   }
 
