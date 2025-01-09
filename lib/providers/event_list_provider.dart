@@ -113,4 +113,28 @@ class EventListProvider extends ChangeNotifier {
       getFavoriteEvents();
     });
   }
+
+  Future<void> updateEvent({
+    required String docId,
+    required String image,
+    required String eventType,
+    required String title,
+    required String description,
+    required DateTime dateTime,
+    required String time,
+  }) async {
+    var collection = await FirebaseUtils.getEventCollection();
+    await collection.doc(docId).update({
+      'image': image,
+      'eventType': eventType,
+      'title': title,
+      'description': description,
+      'dateTime': dateTime.millisecondsSinceEpoch,
+      'time': time,
+    }).then((value) {
+      print('updated Successfully');
+      selectedIndex == 0 ? getAllEvents() : getFilteredEvents();
+      getFavoriteEvents();
+    });
+  }
 }

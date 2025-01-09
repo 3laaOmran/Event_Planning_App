@@ -1,6 +1,7 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/edit_event.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
@@ -37,7 +38,12 @@ class EventDetails extends StatelessWidget {
           color: AppColors.primaryLight,
         ),
         actions: [
-          Image.asset(AssetsManager.editImage),
+          InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, EditEvent.routeName,
+                    arguments: args);
+              },
+              child: Image.asset(AssetsManager.editImage)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.03),
             child: InkWell(
@@ -51,12 +57,13 @@ class EventDetails extends StatelessWidget {
                               ? AppColors.primaryDark
                               : AppColors.whiteColor,
                           title: Text(
-                            'Delete Event.',
+                            AppLocalizations.of(context)!.delete_event,
                             textAlign: TextAlign.center,
                             style: TextStyles.bold20PrimaryLight,
                           ),
                           content: Text(
-                            'Delete event permanently?!!',
+                            AppLocalizations.of(context)!
+                                .delete_event_permanently,
                             style: themeProvider.isDark()
                                 ? TextStyles.medium16White
                                 : TextStyles.medium16black,
@@ -68,7 +75,7 @@ class EventDetails extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('Cancel',
+                              child: Text(AppLocalizations.of(context)!.cancel,
                                   style: TextStyles.medium14White),
                             ),
                             ElevatedButton(
@@ -82,7 +89,7 @@ class EventDetails extends StatelessWidget {
                                 );
                                 // Navigator.popUntil(context, (route) => route.settings.name == HomeScreen.routeName,);
                               },
-                              child: Text('Delete',
+                              child: Text(AppLocalizations.of(context)!.delete,
                                   style: TextStyles.medium14White),
                             ),
                           ],

@@ -1,12 +1,12 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/date_time_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
-import 'package:evently_app/utils/firebase_utils.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
@@ -18,17 +18,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AddEvent extends StatefulWidget {
-  static const String routeName = 'add_event';
+class EditEvent extends StatefulWidget {
+  static const String routeName = 'edit_event';
 
-  const AddEvent({super.key});
+  const EditEvent({super.key});
 
   @override
-  State<AddEvent> createState() => _AddEventState();
+  State<EditEvent> createState() => _EditEventState();
 }
 
-class _AddEventState extends State<AddEvent> {
-  int selectedItem = 0;
+class _EditEventState extends State<EditEvent> {
+  int? selectedItem;
   DateTime? selectedDate;
   String? selectedTime;
   var eventTitleController = TextEditingController();
@@ -42,6 +42,7 @@ class _AddEventState extends State<AddEvent> {
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
     var eventListProvider = Provider.of<EventListProvider>(context);
+    var args = ModalRoute.of(context)!.settings.arguments as EventModel;
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     List<String> tabSNameList = [
@@ -55,6 +56,13 @@ class _AddEventState extends State<AddEvent> {
       AppLocalizations.of(context)!.work_shop,
       AppLocalizations.of(context)!.holiday,
     ];
+    if (selectedItem == null) {
+      selectedItem = eventListProvider.imagesList.indexOf(args.image);
+      eventTitleController.text = args.title;
+      eventDescriptionController.text = args.description;
+      selectedTime = args.time;
+      selectedDate = args.dateTime;
+    }
     List<IconData> iconsName = [
       Icons.directions_bike_outlined,
       Icons.cake_outlined,
@@ -67,8 +75,8 @@ class _AddEventState extends State<AddEvent> {
       Icons.holiday_village_outlined,
     ];
 
-    selectedImage = eventListProvider.imagesList[selectedItem];
-    selectedEventType = tabSNameList[selectedItem];
+    selectedImage = eventListProvider.imagesList[selectedItem!];
+    selectedEventType = tabSNameList[selectedItem!];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: themeProvider.isDark()
@@ -78,7 +86,7 @@ class _AddEventState extends State<AddEvent> {
           color: AppColors.primaryLight,
         ),
         title: Text(
-          AppLocalizations.of(context)!.create_event,
+          AppLocalizations.of(context)!.edit_event,
           style: TextStyles.regular22primaryLight,
         ),
         centerTitle: true,
@@ -97,7 +105,7 @@ class _AddEventState extends State<AddEvent> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Image.asset(
-                    eventListProvider.imagesList[selectedItem],
+                    eventListProvider.imagesList[selectedItem!],
                     height: height * 0.25,
                   ),
                 ),
@@ -234,46 +242,24 @@ class _AddEventState extends State<AddEvent> {
                 CustomElevatedButton(
                     bgColor: AppColors.primaryLight,
                     buttonText: Text(
-                      AppLocalizations.of(context)!.add_event,
+                      AppLocalizations.of(context)!.update_event,
                       style: TextStyles.medium20White,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        if (selectedTime == null || selectedDate == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              padding:
-                                  EdgeInsets.symmetric(vertical: height * 0.02),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              dismissDirection: DismissDirection.horizontal,
-                              backgroundColor: AppColors.redColor,
-                              content: Text(
-                                textAlign: TextAlign.center,
-                                AppLocalizations.of(context)!
-                                    .event_date_time_validation,
-                                style: TextStyles.medium16White,
-                              ),
-                            ),
-                          );
-                        } else {
-                          EventModel event = EventModel(
-                              // isFavorite: false,
-                              image: selectedImage,
-                              eventType: selectedEventType,
-                              title: eventTitleController.text,
-                              description: eventDescriptionController.text,
-                              dateTime: selectedDate!,
-                              time: selectedTime!);
-                          FirebaseUtils.addEventToFireStore(event)
-                              .then((value) {
-                            eventListProvider.getAllEvents();
-                            ToastMessage.showToast(
-                                message:
-                                    AppLocalizations.of(context)!.event_added);
-                            Navigator.pop(context);
-                          });
-                        }
+                        await eventListProvider.updateEvent(
+                            docId: args.id,
+                            image: selectedImage,
+                            eventType: selectedEventType,
+                            title: eventTitleController.text,
+                            description: eventDescriptionController.text,
+                            dateTime: selectedDate!,
+                            time: selectedTime!);
+                        Navigator.popUntil(
+                            context, ModalRoute.withName(HomeScreen.routeName));
+                        ToastMessage.showToast(
+                            message:
+                                AppLocalizations.of(context)!.event_updated);
                       }
                     }),
                 SizedBox(

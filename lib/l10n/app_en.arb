@@ -62,5 +62,13 @@
 "event_date_time_validation" : "Please Choose Event Date && Time",
 "no_events" : "No Events Yet Try Add Some",
 "no_fav_events" : "No Favorite Events",
-"event_details" : "Event Details"
+"event_details" : "Event Details",
+"delete" : "Delete",
+"cancel" : "Cancel",
+"delete_event" : "Delete Event.",
+"delete_event_permanently" : "Delete Event Permanently?!!",
+"edit_event" : "Edit Event",
+"update_event" : "Update Event",
+"event_updated" : "Event Updated Successfully",
+"event_added" : "Event Added Successfully"
 }
