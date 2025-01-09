@@ -11,10 +11,10 @@ import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
+import 'package:evently_app/utils/widgets/show_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -265,16 +265,12 @@ class _AddEventState extends State<AddEvent> {
                               description: eventDescriptionController.text,
                               dateTime: selectedDate!,
                               time: selectedTime!);
-                          FirebaseUtils.addEventToFireStore(event).timeout(
-                              Duration(milliseconds: 500), onTimeout: () {
+                          FirebaseUtils.addEventToFireStore(event)
+                              .then((value) {
                             eventListProvider.getAllEvents();
-                            Fluttertoast.showToast(
-                                msg: "Event Added Successfully",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: AppColors.greenColor,
-                                textColor: AppColors.whiteColor,
-                                fontSize: 20.0);
+                            ToastMessage.showToast(
+                                message:
+                                    AppLocalizations.of(context)!.event_added);
                             Navigator.pop(context);
                           });
                         }

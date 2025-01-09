@@ -68,5 +68,7 @@
 "delete_event" : "Delete Event.",
 "delete_event_permanently" : "Delete Event Permanently?!!",
 "edit_event" : "Edit Event",
-"update_event" : "Update Event"
+"update_event" : "Update Event",
+"event_updated" : "Event Updated Successfully",
+"event_added" : "Event Added Successfully"
 }

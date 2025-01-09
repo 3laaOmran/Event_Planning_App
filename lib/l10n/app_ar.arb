@@ -68,5 +68,7 @@
 "delete_event" : "حذف الحدث.",
 "delete_event_permanently" : "حذف الحدث بشكل نهائي؟!!",
 "edit_event" : "تعديل الحدث",
-"update_event" : "تحديث الحدث"
+"update_event" : "تحديث الحدث",
+"event_updated" : "تم تحديث الحدث بنجاح",
+"event_added" : "تمت اضافة الحدث بنجاح"
 }

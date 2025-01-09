@@ -11,6 +11,7 @@ import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
+import 'package:evently_app/utils/widgets/show_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -256,6 +257,9 @@ class _EditEventState extends State<EditEvent> {
                             time: selectedTime!);
                         Navigator.popUntil(
                             context, ModalRoute.withName(HomeScreen.routeName));
+                        ToastMessage.showToast(
+                            message:
+                                AppLocalizations.of(context)!.event_updated);
                       }
                     }),
                 SizedBox(
