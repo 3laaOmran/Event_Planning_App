@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
 import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/auth/register/register_screen.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/add_event.dart';
+import 'package:evently_app/ui/home/tabs/home_tab/edit_event.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/onboarding/intro_screen.dart';
 import 'package:evently_app/utils/app_theme.dart';
@@ -25,7 +25,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await CashHelper.init();
-  await FirebaseFirestore.instance.disableNetwork();
   bool? onboarding = CashHelper.getData(key: 'onboarding');
   String initialRoute;
   if (onboarding != null) {
@@ -68,6 +67,7 @@ class EventlyApp extends StatelessWidget {
         IntroScreen.routeName: (context) => const IntroScreen(),
         OnboardingScreen.routeName: (context) => const OnboardingScreen(),
         HomeScreen.routeName : (context) => const HomeScreen(),
+        EditEvent.routeName: (context) => const EditEvent(),
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

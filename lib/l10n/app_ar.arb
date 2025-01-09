@@ -62,6 +62,11 @@
 "event_date_time_validation" : "الرجاء اختيار وقت وتاريخ الحدث",
 "no_events" : "لا يوجد اي احداث اضف الان",
 "no_fav_events" : "لا توجد احداث مفضله",
-"event_details" : "تفاصيل الحدث"
-
+"event_details" : "تفاصيل الحدث",
+"delete" : "حذف",
+"cancel" : "الغاء",
+"delete_event" : "حذف الحدث.",
+"delete_event_permanently" : "حذف الحدث بشكل نهائي؟!!",
+"edit_event" : "تعديل الحدث",
+"update_event" : "تحديث الحدث"
 }
