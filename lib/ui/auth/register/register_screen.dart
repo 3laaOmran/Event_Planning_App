@@ -3,9 +3,11 @@ import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/text_styles.dart';
+import 'package:evently_app/utils/widgets/custom_dialog.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
 import 'package:evently_app/utils/widgets/switch_language_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,13 +23,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final nameController = TextEditingController();
+  final nameController = TextEditingController(text: '3laa');
 
-  final emailController = TextEditingController();
+  final emailController = TextEditingController(text: '3laa@gmail.com');
 
-  final passwordController = TextEditingController();
+  final passwordController = TextEditingController(text: '1234567');
 
-  final rePasswordController = TextEditingController();
+  final rePasswordController = TextEditingController(text: '1234567');
+  var formKey = GlobalKey<FormState>();
 
   bool isObscure = true;
   bool isObscure2 = true;
@@ -54,97 +57,183 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 0.04),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Image.asset(AssetsManager.eventlyLogo),
-              SizedBox(height: height * 0.05),
-              CustomTextFormField(
-                controller: nameController,
-                prefixIcon: const ImageIcon(
-                  AssetImage(
-                    AssetsManager.nameIcon,
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                Image.asset(AssetsManager.eventlyLogo),
+                SizedBox(height: height * 0.05),
+                CustomTextFormField(
+                  keyboardType: TextInputType.name,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return AppLocalizations.of(context)!.name_validation;
+                    }
+                    return null;
+                  },
+                  controller: nameController,
+                  prefixIcon: const ImageIcon(
+                    AssetImage(
+                      AssetsManager.nameIcon,
+                    ),
                   ),
+                  hintText: AppLocalizations.of(context)!.name,
                 ),
-                hintText: AppLocalizations.of(context)!.name,
-              ),
-              SizedBox(height: height * 0.015),
-              CustomTextFormField(
-                controller: emailController,
-                prefixIcon: const ImageIcon(
-                  AssetImage(
-                    AssetsManager.emailIcon,
+                SizedBox(height: height * 0.015),
+                CustomTextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return AppLocalizations.of(context)!.email_validation;
+                    }
+                    final bool emailValid = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value);
+                    if (!emailValid) {
+                      return AppLocalizations.of(context)!
+                          .email_format_validation;
+                    }
+                    return null;
+                  },
+                  controller: emailController,
+                  prefixIcon: const ImageIcon(
+                    AssetImage(
+                      AssetsManager.emailIcon,
+                    ),
                   ),
+                  hintText: AppLocalizations.of(context)!.email,
                 ),
-                hintText: AppLocalizations.of(context)!.email,
-              ),
-              SizedBox(height: height * 0.015),
-              CustomTextFormField(
-                isObscure: isObscure,
-                controller: passwordController,
-                prefixIcon: const ImageIcon(
-                  AssetImage(
-                    AssetsManager.passwordIcon,
+                SizedBox(height: height * 0.015),
+                CustomTextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return AppLocalizations.of(context)!.password_validation;
+                    }
+                    if (value.length <= 6) {
+                      return AppLocalizations.of(context)!
+                          .password_format_validation;
+                    }
+                    return null;
+                  },
+                  isObscure: isObscure,
+                  controller: passwordController,
+                  prefixIcon: const ImageIcon(
+                    AssetImage(
+                      AssetsManager.passwordIcon,
+                    ),
                   ),
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        isObscure = !isObscure;
+                        setState(() {});
+                      },
+                      child: Icon(
+                          isObscure ? Icons.visibility_off : Icons.visibility)),
+                  hintText: AppLocalizations.of(context)!.password,
                 ),
-                suffixIcon: GestureDetector(
-                    onTap: () {
-                      isObscure = !isObscure;
-                      setState(() {});
-                    },
-                    child: Icon(
-                        isObscure ? Icons.visibility_off : Icons.visibility)),
-                hintText: AppLocalizations.of(context)!.password,
-              ),
-              SizedBox(height: height * 0.015),
-              CustomTextFormField(
-                isObscure: isObscure2,
-                controller: rePasswordController,
-                prefixIcon: const ImageIcon(
-                  AssetImage(
-                    AssetsManager.passwordIcon,
+                SizedBox(height: height * 0.015),
+                CustomTextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return AppLocalizations.of(context)!
+                          .rePassword_validation;
+                    }
+                    if (value != passwordController.text) {
+                      return AppLocalizations.of(context)!
+                          .rePassword_format_validation;
+                    }
+                    return null;
+                  },
+                  isObscure: isObscure2,
+                  controller: rePasswordController,
+                  prefixIcon: const ImageIcon(
+                    AssetImage(
+                      AssetsManager.passwordIcon,
+                    ),
                   ),
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        isObscure2 = !isObscure2;
+                        setState(() {});
+                      },
+                      child: Icon(isObscure2
+                          ? Icons.visibility_off
+                          : Icons.visibility)),
+                  hintText: AppLocalizations.of(context)!.re_password,
                 ),
-                suffixIcon: GestureDetector(
-                    onTap: () {
-                      isObscure2 = !isObscure2;
-                      setState(() {});
-                    },
-                    child: Icon(
-                        isObscure2 ? Icons.visibility_off : Icons.visibility)),
-                hintText: AppLocalizations.of(context)!.re_password,
-              ),
-              SizedBox(height: height * 0.02),
-              CustomElevatedButton(
-                  bgColor: AppColors.primaryLight,
-                  buttonText: Text(
-                    AppLocalizations.of(context)!.create_account,
-                    style: TextStyles.medium20White,
+                SizedBox(height: height * 0.02),
+                CustomElevatedButton(
+                    bgColor: AppColors.primaryLight,
+                    buttonText: Text(
+                      AppLocalizations.of(context)!.create_account,
+                      style: TextStyles.medium20White,
+                    ),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        CustomDialog.showLoading(
+                            context: context,
+                            message: AppLocalizations.of(context)!.loading);
+                        try {
+                          final credential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text);
+                          CustomDialog.hideLoading(context);
+                          CustomDialog.showAlert(
+                              context: context,
+                              bgColor: themeProvider.isDark()
+                                  ? AppColors.primaryDark
+                                  : AppColors.whiteColor,
+                              title: AppLocalizations.of(context)!.success,
+                              message: AppLocalizations.of(context)!
+                                  .register_successfully,
+                              posActionName: AppLocalizations.of(context)!.ok,
+                              posAction: () {
+                                Navigator.pushReplacementNamed(
+                                    context, HomeScreen.routeName);
+                              });
+                          print('Register Successfully');
+                          print('User ID : ${credential.user!.uid}');
+                        } catch (e) {
+                          CustomDialog.hideLoading(context);
+                          CustomDialog.showAlert(
+                            context: context,
+                            bgColor: themeProvider.isDark()
+                                ? AppColors.primaryDark
+                                : AppColors.whiteColor,
+                            title: AppLocalizations.of(context)!.error,
+                            message:
+                                AppLocalizations.of(context)!.register_error,
+                            posActionName: AppLocalizations.of(context)!.ok,
+                          );
+                          print('Error Ya 3L2');
+                        }
+                      }
+                    }),
+                SizedBox(height: height * 0.02),
+                RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                    text: AppLocalizations.of(context)!.already_have_account,
+                    style: themeProvider.isDark()
+                        ? TextStyles.medium16White
+                        : TextStyles.medium16black,
                   ),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, HomeScreen.routeName);
-                  }),
-              SizedBox(height: height * 0.02),
-              RichText(
-                  text: TextSpan(children: [
-                TextSpan(
-                  text: AppLocalizations.of(context)!.already_have_account,
-                  style: themeProvider.isDark()
-                      ? TextStyles.medium16White
-                      : TextStyles.medium16black,
-                ),
-                TextSpan(
-                    text: AppLocalizations.of(context)!.login,
-                    style: TextStyles.bold16PrimaryLightItalic,
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.pop(context);
-                      }),
-              ])),
-              SizedBox(height: height * 0.02),
-              const SwitchLanguageButton(),
-              SizedBox(height: height * 0.05),
-            ],
+                  TextSpan(
+                      text: AppLocalizations.of(context)!.login,
+                      style: TextStyles.bold16PrimaryLightItalic,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pop(context);
+                        }),
+                ])),
+                SizedBox(height: height * 0.02),
+                const SwitchLanguageButton(),
+                SizedBox(height: height * 0.05),
+              ],
+            ),
           ),
         ),
       ),

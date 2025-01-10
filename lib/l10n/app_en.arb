@@ -70,5 +70,20 @@
 "edit_event" : "Edit Event",
 "update_event" : "Update Event",
 "event_updated" : "Event Updated Successfully",
-"event_added" : "Event Added Successfully"
+"event_added" : "Event Added Successfully",
+"name_validation" : "Please Enter Name",
+"email_validation" : "Please Enter E-mail",
+"email_format_validation" : "Please Enter Valid E-mail",
+"password_validation" : "Please Enter Password",
+"password_format_validation" : "password should be more than 6 chars",
+"rePassword_validation" : "Please Enter Password Confirmation",
+"rePassword_format_validation" : "The Password Doesn't Match",
+"loading" : "Loading...",
+"login_successfully" : "Login Successfully.",
+"register_successfully" : "Account Created Successfully",
+"error" : "Error!!!",
+"success" : "Success",
+"ok" : "Ok",
+"email_and_password_wrong" : "Something went wrong Email or password is incorrect",
+"register_error" : "Something went wrong"
 }
