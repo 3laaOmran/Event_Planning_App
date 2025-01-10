@@ -1,7 +1,10 @@
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/models/user_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_dialog.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
@@ -40,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: themeProvider.isDark()
@@ -180,6 +184,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               .createUserWithEmailAndPassword(
                                   email: emailController.text,
                                   password: passwordController.text);
+                          UserModel user = UserModel(
+                            id: credential.user?.uid ?? '',
+                            name: nameController.text,
+                            email: emailController.text,
+                          );
+                          await FirebaseUtils.addUserToFireStore(user);
+                          userProvider.updateUser(user);
                           CustomDialog.hideLoading(context);
                           CustomDialog.showAlert(
                               context: context,

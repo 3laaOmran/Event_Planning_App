@@ -1,5 +1,6 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/edit_event.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
@@ -21,6 +22,7 @@ class EventDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
     var eventListProvider = Provider.of<EventListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var args = ModalRoute.of(context)!.settings.arguments as EventModel;
@@ -82,7 +84,8 @@ class EventDetails extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryLight),
                               onPressed: () {
-                                eventListProvider.deleteEvent(args.id);
+                                eventListProvider.deleteEvent(
+                                    args.id, userProvider.currentUser!.id);
                                 Navigator.popUntil(
                                   context,
                                   ModalRoute.withName(HomeScreen.routeName),

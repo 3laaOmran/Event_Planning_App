@@ -1,5 +1,8 @@
+import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/home/tabs/profile_tab/widgets/change_theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
@@ -20,8 +23,11 @@ class ProfileTab extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
+    var eventListProvider = Provider.of<EventListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: height * 0.2,
         backgroundColor: AppColors.primaryLight,
         shape: RoundedRectangleBorder(
@@ -56,12 +62,12 @@ class ProfileTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '3laa Omran',
+                    userProvider.currentUser!.name,
                     style: TextStyles.bold24White,
                   ),
                   Text(
                     overflow: TextOverflow.ellipsis,
-                    '3laaomran1102002@gmail.com',
+                    userProvider.currentUser!.email,
                     style: TextStyles.medium16White,
                   )
                 ],
@@ -168,7 +174,10 @@ class ProfileTab extends StatelessWidget {
             ),
             const Spacer(),
             CustomElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                eventListProvider.filteredEventsList = [];
+                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+              },
               bgColor: AppColors.redColor,
               border: BorderSide.none,
               buttonText: Row(

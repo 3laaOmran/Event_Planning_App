@@ -1,6 +1,7 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
@@ -24,13 +25,14 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
     // eventListProvider.getTabsNameList(context);
-    if (eventListProvider.eventsList.isEmpty) {
-      eventListProvider.getAllEvents();
-    }
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
+    if (eventListProvider.eventsList.isEmpty) {
+      eventListProvider.getAllEvents(userProvider.currentUser!.id);
+    }
 
     List<String> tabSNameList = [
       AppLocalizations.of(context)!.all,
@@ -71,7 +73,7 @@ class _HomeTabState extends State<HomeTab> {
               style: TextStyles.regular14White,
             ),
             Text(
-              '3laa Omran',
+              userProvider.currentUser!.name,
               style: TextStyles.bold24White,
             )
           ],
@@ -150,7 +152,8 @@ class _HomeTabState extends State<HomeTab> {
                     labelPadding:
                         EdgeInsets.symmetric(horizontal: width * 0.015),
                     onTap: (index) {
-                      eventListProvider.changeSelectedIndex(index);
+                      eventListProvider.changeSelectedIndex(
+                          index, userProvider.currentUser!.id);
                     },
                     indicatorColor: AppColors.transparent,
                     tabs: tabSNameList.map((tabName) {

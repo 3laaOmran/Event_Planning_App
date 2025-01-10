@@ -1,4 +1,5 @@
 import 'package:evently_app/providers/event_list_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -27,8 +28,9 @@ class _FavoriteTabState extends State<FavoriteTab> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var eventListProvider = Provider.of<EventListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     if (eventListProvider.favoriteEvents.isEmpty) {
-      eventListProvider.getFavoriteEvents();
+      eventListProvider.getFavoriteEvents(userProvider.currentUser!.id);
     }
     filteredList = eventListProvider.favoriteEvents.where((event) {
       return event.title.toLowerCase().contains(searchText.toLowerCase());

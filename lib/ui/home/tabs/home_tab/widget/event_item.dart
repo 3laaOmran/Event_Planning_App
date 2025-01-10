@@ -1,5 +1,6 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
@@ -19,6 +20,7 @@ class EventItem extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
     var eventListProvider = Provider.of<EventListProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: width * 0.04,
@@ -78,8 +80,8 @@ class EventItem extends StatelessWidget {
                 )),
                 InkWell(
                   onTap: () {
-                    eventListProvider.toggleFavorite(
-                        eventModel.id, eventModel.isFavorite);
+                    eventListProvider.toggleFavorite(eventModel.id,
+                        eventModel.isFavorite, userProvider.currentUser!.id);
                   },
                   child: Icon(
                     eventModel.isFavorite

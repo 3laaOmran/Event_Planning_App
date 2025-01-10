@@ -1,6 +1,7 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/date_time_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
@@ -265,9 +266,13 @@ class _AddEventState extends State<AddEvent> {
                               description: eventDescriptionController.text,
                               dateTime: selectedDate!,
                               time: selectedTime!);
-                          FirebaseUtils.addEventToFireStore(event)
+                          var userProvider = Provider.of<UserProvider>(
+                              context, listen: false);
+                          FirebaseUtils.addEventToFireStore(event, userProvider
+                              .currentUser!.id)
                               .then((value) {
-                            eventListProvider.getAllEvents();
+                            eventListProvider
+                                .getAllEvents(userProvider.currentUser!.id);
                             ToastMessage.showToast(
                                 message:
                                     AppLocalizations.of(context)!.event_added);
