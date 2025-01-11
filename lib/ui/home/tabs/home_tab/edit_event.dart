@@ -1,13 +1,13 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/date_time_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
@@ -43,7 +43,7 @@ class _EditEventState extends State<EditEvent> {
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
     var eventListProvider = Provider.of<EventListProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     var args = ModalRoute.of(context)!.settings.arguments as EventModel;
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
@@ -250,7 +250,7 @@ class _EditEventState extends State<EditEvent> {
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         await eventListProvider.updateEvent(
-                            uId: userProvider.currentUser!.id,
+                            uId: CashHelper.getData(key: 'uId'),
                             docId: args.id,
                             image: selectedImage,
                             eventType: selectedEventType,

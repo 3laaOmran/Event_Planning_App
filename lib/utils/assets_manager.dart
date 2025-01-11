@@ -42,4 +42,5 @@ class AssetsManager {
   static const String editImage = 'assets/images/edit_image.png';
   static const String deleteImage = 'assets/images/delete_image.png';
   static const String mapImage = 'assets/images/map_Image.png';
+  static const String mapBg = 'assets/images/map_bg.png';
 }

@@ -1,6 +1,5 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/auth/register/register_screen.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
@@ -29,7 +28,11 @@ void main() async {
   bool? onboarding = CashHelper.getData(key: 'onboarding');
   String initialRoute;
   if (onboarding != null) {
-    initialRoute = LoginScreen.routeName;
+    if (CashHelper.getData(key: 'uId') != null) {
+      initialRoute = HomeScreen.routeName;
+    } else {
+      initialRoute = LoginScreen.routeName;
+    }
   } else {
     initialRoute = IntroScreen.routeName;
   }
@@ -37,7 +40,7 @@ void main() async {
     ChangeNotifierProvider(create: (context) => LanguageProvider()),
     ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ChangeNotifierProvider(create: (context) => EventListProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
+        // ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: EventlyApp(
         initialRoute: initialRoute,

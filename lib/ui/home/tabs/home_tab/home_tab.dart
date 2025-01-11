@@ -1,12 +1,12 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +29,10 @@ class _HomeTabState extends State<HomeTab> {
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     if (eventListProvider.eventsList.isEmpty) {
-      eventListProvider.getAllEvents(userProvider.currentUser!.id);
+      // eventListProvider.getAllEvents(userProvider.currentUser!.id);
+      eventListProvider.getAllEvents(CashHelper.getData(key: 'uId'));
     }
 
     List<String> tabSNameList = [
@@ -73,7 +74,7 @@ class _HomeTabState extends State<HomeTab> {
               style: TextStyles.regular14White,
             ),
             Text(
-              userProvider.currentUser!.name,
+              CashHelper.getData(key: 'uName'),
               style: TextStyles.bold24White,
             )
           ],
@@ -153,7 +154,7 @@ class _HomeTabState extends State<HomeTab> {
                         EdgeInsets.symmetric(horizontal: width * 0.015),
                     onTap: (index) {
                       eventListProvider.changeSelectedIndex(
-                          index, userProvider.currentUser!.id);
+                          index, CashHelper.getData(key: 'uId'));
                     },
                     indicatorColor: AppColors.transparent,
                     tabs: tabSNameList.map((tabName) {

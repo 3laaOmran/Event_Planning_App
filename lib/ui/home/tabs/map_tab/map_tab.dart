@@ -1,3 +1,4 @@
+import 'package:evently_app/utils/assets_manager.dart';
 import 'package:flutter/material.dart';
 
 class MapTab extends StatelessWidget {
@@ -5,8 +6,15 @@ class MapTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(
-      color: Colors.blue,
+    return SafeArea(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(AssetsManager.mapBg), fit: BoxFit.cover),
+        ),
+      ),
     );
   }
 }

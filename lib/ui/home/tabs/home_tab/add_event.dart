@@ -1,13 +1,13 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/date_time_widget.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
@@ -266,13 +266,13 @@ class _AddEventState extends State<AddEvent> {
                               description: eventDescriptionController.text,
                               dateTime: selectedDate!,
                               time: selectedTime!);
-                          var userProvider = Provider.of<UserProvider>(
-                              context, listen: false);
-                          FirebaseUtils.addEventToFireStore(event, userProvider
-                              .currentUser!.id)
+                          // var userProvider = Provider.of<UserProvider>(
+                          //     context, listen: false);
+                          FirebaseUtils.addEventToFireStore(
+                                  event, CashHelper.getData(key: 'uId'))
                               .then((value) {
                             eventListProvider
-                                .getAllEvents(userProvider.currentUser!.id);
+                                .getAllEvents(CashHelper.getData(key: 'uId'));
                             ToastMessage.showToast(
                                 message:
                                     AppLocalizations.of(context)!.event_added);

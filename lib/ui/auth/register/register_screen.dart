@@ -1,9 +1,9 @@
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/models/user_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_dialog.dart';
@@ -26,13 +26,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final nameController = TextEditingController(text: '3laa');
+  final nameController = TextEditingController();
 
-  final emailController = TextEditingController(text: '3laa@gmail.com');
+  final emailController = TextEditingController();
 
-  final passwordController = TextEditingController(text: '1234567');
+  final passwordController = TextEditingController();
 
-  final rePasswordController = TextEditingController(text: '1234567');
+  final rePasswordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   bool isObscure = true;
@@ -43,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: themeProvider.isDark()
@@ -177,6 +177,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         CustomDialog.showLoading(
+                            bgColor: themeProvider.isDark()
+                                ? AppColors.primaryDark
+                                : AppColors.whiteColor,
                             context: context,
                             message: AppLocalizations.of(context)!.loading);
                         try {
@@ -190,7 +193,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             email: emailController.text,
                           );
                           await FirebaseUtils.addUserToFireStore(user);
-                          userProvider.updateUser(user);
+                          // userProvider.updateUser(user);
+                          CashHelper.saveData(key: 'uId', value: user.id);
+                          CashHelper.saveData(key: 'uName', value: user.name);
+                          CashHelper.saveData(key: 'uEmail', value: user.email);
                           CustomDialog.hideLoading(context);
                           CustomDialog.showAlert(
                               context: context,
@@ -205,8 +211,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Navigator.pushReplacementNamed(
                                     context, HomeScreen.routeName);
                               });
-                          print('Register Successfully');
-                          print('User ID : ${credential.user!.uid}');
                         } catch (e) {
                           CustomDialog.hideLoading(context);
                           CustomDialog.showAlert(
@@ -219,7 +223,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 AppLocalizations.of(context)!.register_error,
                             posActionName: AppLocalizations.of(context)!.ok,
                           );
-                          print('Error Ya 3L2');
                         }
                       }
                     }),

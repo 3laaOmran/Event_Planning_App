@@ -1,11 +1,11 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/home/tabs/profile_tab/widgets/change_theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class ProfileTab extends StatelessWidget {
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
     var eventListProvider = Provider.of<EventListProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -62,12 +62,12 @@ class ProfileTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userProvider.currentUser!.name,
+                    CashHelper.getData(key: 'uName'),
                     style: TextStyles.bold24White,
                   ),
                   Text(
                     overflow: TextOverflow.ellipsis,
-                    userProvider.currentUser!.email,
+                    CashHelper.getData(key: 'uEmail'),
                     style: TextStyles.medium16White,
                   )
                 ],
@@ -175,6 +175,9 @@ class ProfileTab extends StatelessWidget {
             const Spacer(),
             CustomElevatedButton(
               onPressed: () {
+                CashHelper.removeData(key: 'uId');
+                CashHelper.removeData(key: 'uName');
+                CashHelper.removeData(key: 'uEmail');
                 eventListProvider.filteredEventsList = [];
                 Navigator.pushReplacementNamed(context, LoginScreen.routeName);
               },

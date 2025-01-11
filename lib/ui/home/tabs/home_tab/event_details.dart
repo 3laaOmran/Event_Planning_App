@@ -1,11 +1,11 @@
 import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/edit_event.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/choose_location_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class EventDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
     var eventListProvider = Provider.of<EventListProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var args = ModalRoute.of(context)!.settings.arguments as EventModel;
@@ -85,7 +85,7 @@ class EventDetails extends StatelessWidget {
                                   backgroundColor: AppColors.primaryLight),
                               onPressed: () {
                                 eventListProvider.deleteEvent(
-                                    args.id, userProvider.currentUser!.id);
+                                    args.id, CashHelper.getData(key: 'uId'));
                                 Navigator.popUntil(
                                   context,
                                   ModalRoute.withName(HomeScreen.routeName),

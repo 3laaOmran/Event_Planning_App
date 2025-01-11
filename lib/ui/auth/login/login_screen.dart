@@ -1,12 +1,13 @@
+import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
-import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/auth/forget_password/forget_password_screen.dart';
 import 'package:evently_app/ui/auth/register/register_screen.dart';
 import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_dialog.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
@@ -16,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,8 +30,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var emailController = TextEditingController(text: '3laa@gmail.com');
-  var passwordController = TextEditingController(text: '1234567');
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool isObscure = true;
 
@@ -39,7 +41,42 @@ class _LoginScreenState extends State<LoginScreen> {
     var width = MediaQuery.of(context).size.width;
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
+    var eventListProvider = Provider.of<EventListProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
+    Future<UserCredential?> loginWithGoogle() async {
+      try {
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) {
+          return null;
+        }
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        );
+        final UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        print('Google sign-in successful!');
+        CustomDialog.showAlert(
+          context: context,
+          title: AppLocalizations.of(context)!.success,
+          message: 'Google sign-in successful!',
+          posActionName: AppLocalizations.of(context)!.ok,
+        );
+        return userCredential;
+      } catch (e) {
+        print('Errorrrrrrrrrrrr: $e');
+        CustomDialog.showAlert(
+          context: context,
+          title: AppLocalizations.of(context)!.error,
+          message: e.toString(),
+          posActionName: AppLocalizations.of(context)!.ok,
+        );
+        return null;
+      }
+    }
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 0.04),
@@ -131,6 +168,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         CustomDialog.showLoading(
+                            bgColor: themeProvider.isDark()
+                                ? AppColors.primaryDark
+                                : AppColors.whiteColor,
                             context: context,
                             message: AppLocalizations.of(context)!.loading);
                         try {
@@ -143,7 +183,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (user == null) {
                             return;
                           }
-                          userProvider.updateUser(user);
+                          // userProvider.updateUser(user);
+                          CashHelper.saveData(key: 'uId', value: user.id);
+                          CashHelper.saveData(key: 'uName', value: user.name);
+                          CashHelper.saveData(key: 'uEmail', value: user.email);
                           CustomDialog.hideLoading(context);
                           CustomDialog.showAlert(
                               context: context,
@@ -155,12 +198,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   .login_successfully,
                               posActionName: AppLocalizations.of(context)!.ok,
                               posAction: () {
+                                eventListProvider.getAllEvents(user.id);
+                                eventListProvider.getFavoriteEvents(user.id);
                                 Navigator.pushReplacementNamed(
                                     context, HomeScreen.routeName);
                               });
-
-                          print('Login Successfully');
-                          print('User ID : ${credential.user!.uid}');
                         } catch (e) {
                           CustomDialog.hideLoading(context);
                           CustomDialog.showAlert(
@@ -173,7 +215,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .email_and_password_wrong,
                             posActionName: AppLocalizations.of(context)!.ok,
                           );
-                          print('Error Ya 3L2');
                         }
                       }
                     }),
@@ -239,7 +280,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      loginWithGoogle();
+                    }),
                 SizedBox(height: height * 0.02),
                 const SwitchLanguageButton(),
                 SizedBox(height: height * 0.05),
