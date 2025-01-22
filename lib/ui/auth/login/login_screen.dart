@@ -1,23 +1,19 @@
-import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
 import 'package:evently_app/ui/auth/forget_password/forget_password_screen.dart';
+import 'package:evently_app/ui/auth/login/login_navigator.dart';
+import 'package:evently_app/ui/auth/login/login_screen_view_model.dart';
 import 'package:evently_app/ui/auth/register/register_screen.dart';
-import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
-import 'package:evently_app/utils/firebase_utils.dart';
-import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_dialog.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
 import 'package:evently_app/utils/widgets/switch_language_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,60 +25,32 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
+  LoginScreenViewModel viewModel = LoginScreenViewModel();
+
   bool isObscure = true;
+  var themeProvider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel.navigator = this;
+  }
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var languageProvider = Provider.of<LanguageProvider>(context);
-    var themeProvider = Provider.of<ThemeProvider>(context);
-    var eventListProvider = Provider.of<EventListProvider>(context);
-    // var userProvider = Provider.of<UserProvider>(context);
-    Future<UserCredential?> loginWithGoogle() async {
-      try {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        if (googleUser == null) {
-          return null;
-        }
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        final OAuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
-        final UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithCredential(credential);
-        print('Google sign-in successful!');
-        CustomDialog.showAlert(
-          context: context,
-          title: AppLocalizations.of(context)!.success,
-          message: 'Google sign-in successful!',
-          posActionName: AppLocalizations.of(context)!.ok,
-        );
-        return userCredential;
-      } catch (e) {
-        print('Errorrrrrrrrrrrr: $e');
-        CustomDialog.showAlert(
-          context: context,
-          title: AppLocalizations.of(context)!.error,
-          message: e.toString(),
-          posActionName: AppLocalizations.of(context)!.ok,
-        );
-        return null;
-      }
-    }
+    themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 0.04),
         child: SingleChildScrollView(
           child: Form(
-            key: formKey,
+            key: viewModel.formKey,
             child: Column(
               children: [
                 SizedBox(height: height * 0.1),
@@ -103,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     return null;
                   },
-                  controller: emailController,
+                  controller: viewModel.emailController,
                   prefixIcon: const ImageIcon(
                     AssetImage(
                       AssetsManager.emailIcon,
@@ -124,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     return null;
                   },
-                  controller: passwordController,
+                  controller: viewModel.passwordController,
                   isObscure: isObscure,
                   suffixIcon: GestureDetector(
                       onTap: () {
@@ -166,57 +134,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyles.medium20White,
                     ),
                     onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        CustomDialog.showLoading(
-                            bgColor: themeProvider.isDark()
-                                ? AppColors.primaryDark
-                                : AppColors.whiteColor,
-                            context: context,
-                            message: AppLocalizations.of(context)!.loading);
-                        try {
-                          final credential = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-                          var user = await FirebaseUtils.readUserFromFireStore(
-                              credential.user?.uid ?? '');
-                          if (user == null) {
-                            return;
-                          }
-                          // userProvider.updateUser(user);
-                          CashHelper.saveData(key: 'uId', value: user.id);
-                          CashHelper.saveData(key: 'uName', value: user.name);
-                          CashHelper.saveData(key: 'uEmail', value: user.email);
-                          CustomDialog.hideLoading(context);
-                          CustomDialog.showAlert(
-                              context: context,
-                              bgColor: themeProvider.isDark()
-                                  ? AppColors.primaryDark
-                                  : AppColors.whiteColor,
-                              title: AppLocalizations.of(context)!.success,
-                              message: AppLocalizations.of(context)!
-                                  .login_successfully,
-                              posActionName: AppLocalizations.of(context)!.ok,
-                              posAction: () {
-                                eventListProvider.getAllEvents(user.id);
-                                eventListProvider.getFavoriteEvents(user.id);
-                                Navigator.pushReplacementNamed(
-                                    context, HomeScreen.routeName);
-                              });
-                        } catch (e) {
-                          CustomDialog.hideLoading(context);
-                          CustomDialog.showAlert(
-                            context: context,
-                            bgColor: themeProvider.isDark()
-                                ? AppColors.primaryDark
-                                : AppColors.whiteColor,
-                            title: AppLocalizations.of(context)!.error,
-                            message: AppLocalizations.of(context)!
-                                .email_and_password_wrong,
-                            posActionName: AppLocalizations.of(context)!.ok,
-                          );
-                        }
-                      }
+                      viewModel.login(
+                        loadingMsg: AppLocalizations.of(context)!.loading,
+                        successTitleMsg: AppLocalizations.of(context)!.success,
+                        successMsg:
+                            AppLocalizations.of(context)!.login_successfully,
+                        errorTitleMsg: AppLocalizations.of(context)!.error,
+                        errorMsg: AppLocalizations.of(context)!
+                            .email_and_password_wrong,
+                      );
                     }),
                 SizedBox(height: height * 0.02),
                 RichText(
@@ -281,7 +207,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     onPressed: () {
-                      loginWithGoogle();
+                      viewModel.signInWithGoogle(
+                        loadingMsg: AppLocalizations.of(context)!.loading,
+                        successTitleMsg: AppLocalizations.of(context)!.success,
+                        successMsg:
+                            AppLocalizations.of(context)!.login_successfully,
+                        errorTitleMsg: AppLocalizations.of(context)!.error,
+                        errorMsg: AppLocalizations.of(context)!
+                            .email_and_password_wrong,
+                      );
                     }),
                 SizedBox(height: height * 0.02),
                 const SwitchLanguageButton(),
@@ -291,6 +225,39 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  void gotoHome(String routeName) {
+    Navigator.pushReplacementNamed(context, routeName);
+  }
+
+  @override
+  void hideLoading() {
+    CustomDialog.hideLoading(context);
+  }
+
+  @override
+  void showLoading(String message) {
+    CustomDialog.showLoading(
+        bgColor: themeProvider.isDark()
+            ? AppColors.primaryDark
+            : AppColors.whiteColor,
+        context: context,
+        message: message);
+  }
+
+  @override
+  void showMessage(String message, String title, [Function? posAction]) {
+    CustomDialog.showAlert(
+      title: title,
+      posAction: posAction,
+      context: context,
+      message: message,
+      posActionName: AppLocalizations.of(context)!.ok,
+      bgColor:
+          themeProvider.isDark() ? AppColors.primaryDark : AppColors.whiteColor,
     );
   }
 }

@@ -176,7 +176,10 @@ class _HomeTabState extends State<HomeTab> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(AssetsManager.onboardingTwoDark),
+                        Image.asset(
+                          AssetsManager.onboardingTwoDark,
+                          height: height * 0.3,
+                        ),
                         SizedBox(height: height * 0.02),
                         Text(
                           AppLocalizations.of(context)!.no_events,

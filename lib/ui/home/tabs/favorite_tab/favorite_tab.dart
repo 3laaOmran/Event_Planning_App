@@ -60,7 +60,10 @@ class _FavoriteTabState extends State<FavoriteTab> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(AssetsManager.onboardingOneDark),
+                      Image.asset(
+                        AssetsManager.onboardingOneDark,
+                        height: height * 0.3,
+                      ),
                       Text(
                         AppLocalizations.of(context)!.no_fav_events,
                         style: TextStyles.bold20PrimaryLight,

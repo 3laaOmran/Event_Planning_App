@@ -8,8 +8,10 @@ import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/change_lang_bottom_sheet.dart';
@@ -174,10 +176,16 @@ class ProfileTab extends StatelessWidget {
             ),
             const Spacer(),
             CustomElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 CashHelper.removeData(key: 'uId');
                 CashHelper.removeData(key: 'uName');
                 CashHelper.removeData(key: 'uEmail');
+                if (CashHelper.getData(key: 'loginWithGoogle') != null) {
+                  GoogleSignIn googleSignIn = GoogleSignIn();
+                  googleSignIn.disconnect();
+                  await FirebaseAuth.instance.signOut();
+                  CashHelper.removeData(key: 'loginWithGoogle');
+                }
                 eventListProvider.filteredEventsList = [];
                 Navigator.pushReplacementNamed(context, LoginScreen.routeName);
               },
