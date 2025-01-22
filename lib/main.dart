@@ -28,7 +28,11 @@ void main() async {
   bool? onboarding = CashHelper.getData(key: 'onboarding');
   String initialRoute;
   if (onboarding != null) {
-    initialRoute = LoginScreen.routeName;
+    if (CashHelper.getData(key: 'uId') != null) {
+      initialRoute = HomeScreen.routeName;
+    } else {
+      initialRoute = LoginScreen.routeName;
+    }
   } else {
     initialRoute = IntroScreen.routeName;
   }
@@ -36,6 +40,7 @@ void main() async {
     ChangeNotifierProvider(create: (context) => LanguageProvider()),
     ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ChangeNotifierProvider(create: (context) => EventListProvider()),
+        // ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: EventlyApp(
         initialRoute: initialRoute,

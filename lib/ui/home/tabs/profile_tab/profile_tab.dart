@@ -1,12 +1,17 @@
+import 'package:evently_app/providers/event_list_provider.dart';
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/home/tabs/profile_tab/widgets/change_theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/change_lang_bottom_sheet.dart';
@@ -20,8 +25,11 @@ class ProfileTab extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
+    var eventListProvider = Provider.of<EventListProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: height * 0.2,
         backgroundColor: AppColors.primaryLight,
         shape: RoundedRectangleBorder(
@@ -56,12 +64,12 @@ class ProfileTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '3laa Omran',
+                    CashHelper.getData(key: 'uName'),
                     style: TextStyles.bold24White,
                   ),
                   Text(
                     overflow: TextOverflow.ellipsis,
-                    '3laaomran1102002@gmail.com',
+                    CashHelper.getData(key: 'uEmail'),
                     style: TextStyles.medium16White,
                   )
                 ],
@@ -168,7 +176,19 @@ class ProfileTab extends StatelessWidget {
             ),
             const Spacer(),
             CustomElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                CashHelper.removeData(key: 'uId');
+                CashHelper.removeData(key: 'uName');
+                CashHelper.removeData(key: 'uEmail');
+                if (CashHelper.getData(key: 'loginWithGoogle') != null) {
+                  GoogleSignIn googleSignIn = GoogleSignIn();
+                  googleSignIn.disconnect();
+                  await FirebaseAuth.instance.signOut();
+                  CashHelper.removeData(key: 'loginWithGoogle');
+                }
+                eventListProvider.filteredEventsList = [];
+                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+              },
               bgColor: AppColors.redColor,
               border: BorderSide.none,
               buttonText: Row(

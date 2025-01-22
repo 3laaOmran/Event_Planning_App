@@ -7,6 +7,7 @@ import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
@@ -265,9 +266,13 @@ class _AddEventState extends State<AddEvent> {
                               description: eventDescriptionController.text,
                               dateTime: selectedDate!,
                               time: selectedTime!);
-                          FirebaseUtils.addEventToFireStore(event)
+                          // var userProvider = Provider.of<UserProvider>(
+                          //     context, listen: false);
+                          FirebaseUtils.addEventToFireStore(
+                                  event, CashHelper.getData(key: 'uId'))
                               .then((value) {
-                            eventListProvider.getAllEvents();
+                            eventListProvider
+                                .getAllEvents(CashHelper.getData(key: 'uId'));
                             ToastMessage.showToast(
                                 message:
                                     AppLocalizations.of(context)!.event_added);

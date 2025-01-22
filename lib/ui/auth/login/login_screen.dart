@@ -1,11 +1,13 @@
 import 'package:evently_app/providers/language_provider.dart';
 import 'package:evently_app/providers/theme_provider.dart';
 import 'package:evently_app/ui/auth/forget_password/forget_password_screen.dart';
+import 'package:evently_app/ui/auth/login/login_navigator.dart';
+import 'package:evently_app/ui/auth/login/login_screen_view_model.dart';
 import 'package:evently_app/ui/auth/register/register_screen.dart';
-import 'package:evently_app/ui/home/home_screen/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
 import 'package:evently_app/utils/text_styles.dart';
+import 'package:evently_app/utils/widgets/custom_dialog.dart';
 import 'package:evently_app/utils/widgets/custom_elevated_button.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
 import 'package:evently_app/utils/widgets/switch_language_button.dart';
@@ -23,151 +25,239 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
+  LoginScreenViewModel viewModel = LoginScreenViewModel();
+
   bool isObscure = true;
+  var themeProvider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel.navigator = this;
+  }
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var languageProvider = Provider.of<LanguageProvider>(context);
-    var themeProvider = Provider.of<ThemeProvider>(context);
+    themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: width * 0.04),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: height * 0.1),
-              Image.asset(AssetsManager.eventlyLogo),
-              SizedBox(height: height * 0.05),
-              CustomTextFormField(
-                controller: emailController,
-                prefixIcon: const ImageIcon(
-                  AssetImage(
-                    AssetsManager.emailIcon,
-                  ),
-                ),
-                hintText: AppLocalizations.of(context)!.email,
-              ),
-              SizedBox(height: height * 0.015),
-              CustomTextFormField(
-                controller: passwordController,
-                isObscure: isObscure,
-                suffixIcon: GestureDetector(
-                    onTap: () {
-                      isObscure = !isObscure;
-                      setState(() {});
-                    },
-                    child: Icon(
-                        isObscure ? Icons.visibility_off : Icons.visibility)),
-                prefixIcon: const ImageIcon(
-                  AssetImage(
-                    AssetsManager.passwordIcon,
-                  ),
-                ),
-                hintText: AppLocalizations.of(context)!.password,
-              ),
-              Align(
-                alignment: languageProvider.appLanguage == 'en'
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, ForgetPasswordScreen.routeName);
+          child: Form(
+            key: viewModel.formKey,
+            child: Column(
+              children: [
+                SizedBox(height: height * 0.1),
+                Image.asset(AssetsManager.eventlyLogo),
+                SizedBox(height: height * 0.05),
+                CustomTextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return AppLocalizations.of(context)!.email_validation;
+                    }
+                    final bool emailValid = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value);
+                    if (!emailValid) {
+                      return AppLocalizations.of(context)!
+                          .email_format_validation;
+                    }
+                    return null;
                   },
-                  child: Text(
-                    AppLocalizations.of(context)!.forget_password,
-                    style: TextStyles.bold16PrimaryLightItalic.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.primaryLight,
+                  controller: viewModel.emailController,
+                  prefixIcon: const ImageIcon(
+                    AssetImage(
+                      AssetsManager.emailIcon,
+                    ),
+                  ),
+                  hintText: AppLocalizations.of(context)!.email,
+                ),
+                SizedBox(height: height * 0.015),
+                CustomTextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return AppLocalizations.of(context)!.password_validation;
+                    }
+                    if (value.length <= 6) {
+                      return AppLocalizations.of(context)!
+                          .password_format_validation;
+                    }
+                    return null;
+                  },
+                  controller: viewModel.passwordController,
+                  isObscure: isObscure,
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        isObscure = !isObscure;
+                        setState(() {});
+                      },
+                      child: Icon(
+                          isObscure ? Icons.visibility_off : Icons.visibility)),
+                  prefixIcon: const ImageIcon(
+                    AssetImage(
+                      AssetsManager.passwordIcon,
+                    ),
+                  ),
+                  hintText: AppLocalizations.of(context)!.password,
+                ),
+                Align(
+                  alignment: languageProvider.appLanguage == 'en'
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, ForgetPasswordScreen.routeName);
+                    },
+                    child: Text(
+                      AppLocalizations.of(context)!.forget_password,
+                      style: TextStyles.bold16PrimaryLightItalic.copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.primaryLight,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: height * 0.01),
-              CustomElevatedButton(
-                  bgColor: AppColors.primaryLight,
-                  buttonText: Text(
-                    AppLocalizations.of(context)!.login,
-                    style: TextStyles.medium20White,
+                SizedBox(height: height * 0.01),
+                CustomElevatedButton(
+                    bgColor: AppColors.primaryLight,
+                    buttonText: Text(
+                      AppLocalizations.of(context)!.login,
+                      style: TextStyles.medium20White,
+                    ),
+                    onPressed: () async {
+                      viewModel.login(
+                        loadingMsg: AppLocalizations.of(context)!.loading,
+                        successTitleMsg: AppLocalizations.of(context)!.success,
+                        successMsg:
+                            AppLocalizations.of(context)!.login_successfully,
+                        errorTitleMsg: AppLocalizations.of(context)!.error,
+                        errorMsg: AppLocalizations.of(context)!
+                            .email_and_password_wrong,
+                      );
+                    }),
+                SizedBox(height: height * 0.02),
+                RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                    text: AppLocalizations.of(context)!.do_not_have_account,
+                    style: themeProvider.isDark()
+                        ? TextStyles.medium16White
+                        : TextStyles.medium16black,
                   ),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, HomeScreen.routeName);
-                  }),
-              SizedBox(height: height * 0.02),
-              RichText(
-                  text: TextSpan(children: [
-                TextSpan(
-                  text: AppLocalizations.of(context)!.do_not_have_account,
-                  style: themeProvider.isDark()
-                      ? TextStyles.medium16White
-                      : TextStyles.medium16black,
+                  TextSpan(
+                      text: AppLocalizations.of(context)!.create_account,
+                      style: TextStyles.bold16PrimaryLightItalic.copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.primaryLight,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushNamed(
+                              context, RegisterScreen.routeName);
+                        }),
+                ])),
+                SizedBox(height: height * 0.02),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Divider(
+                        endIndent: 16,
+                        indent: 26,
+                        thickness: 1,
+                        color: AppColors.primaryLight,
+                      ),
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.or,
+                      style: TextStyles.medium16primaryLight,
+                    ),
+                    const Expanded(
+                      child: Divider(
+                        endIndent: 26,
+                        indent: 16,
+                        thickness: 1,
+                        color: AppColors.primaryLight,
+                      ),
+                    ),
+                  ],
                 ),
-                TextSpan(
-                    text: AppLocalizations.of(context)!.create_account,
-                    style: TextStyles.bold16PrimaryLightItalic.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.primaryLight,
+                SizedBox(height: height * 0.02),
+                CustomElevatedButton(
+                    bgColor: AppColors.transparent,
+                    buttonText: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(AssetsManager.googleIcon),
+                        SizedBox(
+                          width: width * 0.02,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.login_with_google,
+                          style: TextStyles.medium20primaryLight,
+                        ),
+                      ],
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.pushNamed(context, RegisterScreen.routeName);
-                      }),
-              ])),
-              SizedBox(height: height * 0.02),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Divider(
-                      endIndent: 16,
-                      indent: 26,
-                      thickness: 1,
-                      color: AppColors.primaryLight,
-                    ),
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.or,
-                    style: TextStyles.medium16primaryLight,
-                  ),
-                  const Expanded(
-                    child: Divider(
-                      endIndent: 26,
-                      indent: 16,
-                      thickness: 1,
-                      color: AppColors.primaryLight,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.02),
-              CustomElevatedButton(
-                  bgColor: AppColors.transparent,
-                  buttonText: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(AssetsManager.googleIcon),
-                      SizedBox(
-                        width: width * 0.02,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.login_with_google,
-                        style: TextStyles.medium20primaryLight,
-                      ),
-                    ],
-                  ),
-                  onPressed: () {}),
-              SizedBox(height: height * 0.02),
-              const SwitchLanguageButton(),
-              SizedBox(height: height * 0.05),
-            ],
+                    onPressed: () {
+                      viewModel.signInWithGoogle(
+                        loadingMsg: AppLocalizations.of(context)!.loading,
+                        successTitleMsg: AppLocalizations.of(context)!.success,
+                        successMsg:
+                            AppLocalizations.of(context)!.login_successfully,
+                        errorTitleMsg: AppLocalizations.of(context)!.error,
+                        errorMsg: AppLocalizations.of(context)!
+                            .email_and_password_wrong,
+                      );
+                    }),
+                SizedBox(height: height * 0.02),
+                const SwitchLanguageButton(),
+                SizedBox(height: height * 0.05),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  void gotoHome(String routeName) {
+    Navigator.pushReplacementNamed(context, routeName);
+  }
+
+  @override
+  void hideLoading() {
+    CustomDialog.hideLoading(context);
+  }
+
+  @override
+  void showLoading(String message) {
+    CustomDialog.showLoading(
+        bgColor: themeProvider.isDark()
+            ? AppColors.primaryDark
+            : AppColors.whiteColor,
+        context: context,
+        message: message);
+  }
+
+  @override
+  void showMessage(String message, String title, [Function? posAction]) {
+    CustomDialog.showAlert(
+      title: title,
+      posAction: posAction,
+      context: context,
+      message: message,
+      posActionName: AppLocalizations.of(context)!.ok,
+      bgColor:
+          themeProvider.isDark() ? AppColors.primaryDark : AppColors.whiteColor,
     );
   }
 }

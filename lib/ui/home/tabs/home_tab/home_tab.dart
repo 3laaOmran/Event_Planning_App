@@ -6,6 +6,7 @@ import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/tab_bar_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +25,15 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
     // eventListProvider.getTabsNameList(context);
-    if (eventListProvider.eventsList.isEmpty) {
-      eventListProvider.getAllEvents();
-    }
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var themeProvider = Provider.of<ThemeProvider>(context);
     var languageProvider = Provider.of<LanguageProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
+    if (eventListProvider.eventsList.isEmpty) {
+      // eventListProvider.getAllEvents(userProvider.currentUser!.id);
+      eventListProvider.getAllEvents(CashHelper.getData(key: 'uId'));
+    }
 
     List<String> tabSNameList = [
       AppLocalizations.of(context)!.all,
@@ -71,7 +74,7 @@ class _HomeTabState extends State<HomeTab> {
               style: TextStyles.regular14White,
             ),
             Text(
-              '3laa Omran',
+              CashHelper.getData(key: 'uName'),
               style: TextStyles.bold24White,
             )
           ],
@@ -150,7 +153,8 @@ class _HomeTabState extends State<HomeTab> {
                     labelPadding:
                         EdgeInsets.symmetric(horizontal: width * 0.015),
                     onTap: (index) {
-                      eventListProvider.changeSelectedIndex(index);
+                      eventListProvider.changeSelectedIndex(
+                          index, CashHelper.getData(key: 'uId'));
                     },
                     indicatorColor: AppColors.transparent,
                     tabs: tabSNameList.map((tabName) {
@@ -172,7 +176,10 @@ class _HomeTabState extends State<HomeTab> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(AssetsManager.onboardingTwoDark),
+                        Image.asset(
+                          AssetsManager.onboardingTwoDark,
+                          height: height * 0.3,
+                        ),
                         SizedBox(height: height * 0.02),
                         Text(
                           AppLocalizations.of(context)!.no_events,

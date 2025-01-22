@@ -16,6 +16,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color? borderColor;
   final int? maxLines;
   final validation validator;
+  final TextInputType? keyboardType;
   final Function(String)? onChanged;
 
   const CustomTextFormField(
@@ -29,12 +30,14 @@ class CustomTextFormField extends StatelessWidget {
       this.borderColor,
       this.maxLines,
       this.validator,
-      this.onChanged});
+      this.onChanged,
+      this.keyboardType});
 
   @override
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<ThemeProvider>(context);
     return TextFormField(
+      keyboardType: keyboardType,
       onChanged: onChanged,
       validator: validator,
       maxLines: maxLines ?? 1,

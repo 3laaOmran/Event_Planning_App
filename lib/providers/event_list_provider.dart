@@ -36,9 +36,10 @@ class EventListProvider extends ChangeNotifier {
     AssetsManager.workShopImage,
     AssetsManager.holidayImage,
   ];
-  void getAllEvents() async {
+
+  void getAllEvents(String uId) async {
     QuerySnapshot<EventModel> querySnapshot =
-        await FirebaseUtils.getEventCollection()
+        await FirebaseUtils.getEventCollection(uId)
             .orderBy('dateTime', descending: false)
             .get();
     eventsList = querySnapshot.docs.map((event) {
@@ -48,9 +49,9 @@ class EventListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getFilteredEvents() async {
+  void getFilteredEvents(String uId) async {
     QuerySnapshot<EventModel> querySnapshot =
-        await FirebaseUtils.getEventCollection()
+        await FirebaseUtils.getEventCollection(uId)
             .orderBy('dateTime', descending: false)
             .get();
     eventsList = querySnapshot.docs.map((event) {
@@ -66,33 +67,34 @@ class EventListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeSelectedIndex(int newSelectedIndex) {
+  void changeSelectedIndex(int newSelectedIndex, String uId) {
     selectedIndex = newSelectedIndex;
     if (selectedIndex == 0) {
-      getAllEvents();
+      getAllEvents(uId);
     } else {
-      getFilteredEvents();
+      getFilteredEvents(uId);
     }
   }
 
-  Future<void> updateFavorite(String docId, bool isFavorite) async {
-    var collection = await FirebaseUtils.getEventCollection();
-    await collection.doc(docId).update({'isFavorite': isFavorite}).timeout(
-        Duration(milliseconds: 500), onTimeout: () {
-      selectedIndex == 0 ? getAllEvents() : getFilteredEvents();
-      getFavoriteEvents();
+  Future<void> updateFavorite(String docId, bool isFavorite, String uId) async {
+    var collection = await FirebaseUtils.getEventCollection(uId);
+    await collection
+        .doc(docId)
+        .update({'isFavorite': isFavorite}).then((value) {
+      selectedIndex == 0 ? getAllEvents(uId) : getFilteredEvents(uId);
+      getFavoriteEvents(uId);
     });
   }
 
-  void toggleFavorite(String docId, bool isFavorite) {
-    updateFavorite(docId, !isFavorite);
+  void toggleFavorite(String docId, bool isFavorite, String uId) {
+    updateFavorite(docId, !isFavorite, uId);
   }
 
   List<EventModel> favoriteEvents = [];
 
-  void getFavoriteEvents() async {
+  void getFavoriteEvents(String uId) async {
     QuerySnapshot<EventModel> querySnapshot =
-        await FirebaseUtils.getEventCollection()
+        await FirebaseUtils.getEventCollection(uId)
             .orderBy('dateTime', descending: false)
             .get();
     eventsList = querySnapshot.docs.map((event) {
@@ -105,16 +107,16 @@ class EventListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteEvent(String docId) async {
-    var collection = await FirebaseUtils.getEventCollection();
-    await collection.doc(docId).delete().timeout(Duration(milliseconds: 500),
-        onTimeout: () {
-      selectedIndex == 0 ? getAllEvents() : getFilteredEvents();
-      getFavoriteEvents();
+  Future<void> deleteEvent(String docId, String uId) async {
+    var collection = await FirebaseUtils.getEventCollection(uId);
+    await collection.doc(docId).delete().then((value) {
+      selectedIndex == 0 ? getAllEvents(uId) : getFilteredEvents(uId);
+      getFavoriteEvents(uId);
     });
   }
 
   Future<void> updateEvent({
+    required String uId,
     required String docId,
     required String image,
     required String eventType,
@@ -123,7 +125,7 @@ class EventListProvider extends ChangeNotifier {
     required DateTime dateTime,
     required String time,
   }) async {
-    var collection = await FirebaseUtils.getEventCollection();
+    var collection = await FirebaseUtils.getEventCollection(uId);
     await collection.doc(docId).update({
       'image': image,
       'eventType': eventType,
@@ -133,8 +135,8 @@ class EventListProvider extends ChangeNotifier {
       'time': time,
     }).then((value) {
       print('updated Successfully');
-      selectedIndex == 0 ? getAllEvents() : getFilteredEvents();
-      getFavoriteEvents();
+      selectedIndex == 0 ? getAllEvents(uId) : getFilteredEvents(uId);
+      getFavoriteEvents(uId);
     });
   }
 }

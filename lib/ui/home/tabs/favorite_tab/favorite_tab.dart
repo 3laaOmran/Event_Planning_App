@@ -3,6 +3,7 @@ import 'package:evently_app/ui/home/tabs/home_tab/event_details.dart';
 import 'package:evently_app/ui/home/tabs/home_tab/widget/event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/assets_manager.dart';
+import 'package:evently_app/utils/helpers/cash_helper.dart';
 import 'package:evently_app/utils/models/event_model.dart';
 import 'package:evently_app/utils/text_styles.dart';
 import 'package:evently_app/utils/widgets/custom_text_form_field.dart';
@@ -27,8 +28,10 @@ class _FavoriteTabState extends State<FavoriteTab> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     var eventListProvider = Provider.of<EventListProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     if (eventListProvider.favoriteEvents.isEmpty) {
-      eventListProvider.getFavoriteEvents();
+      // eventListProvider.getFavoriteEvents(userProvider.currentUser!.id);
+      eventListProvider.getFavoriteEvents(CashHelper.getData(key: 'uId'));
     }
     filteredList = eventListProvider.favoriteEvents.where((event) {
       return event.title.toLowerCase().contains(searchText.toLowerCase());
@@ -57,7 +60,10 @@ class _FavoriteTabState extends State<FavoriteTab> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(AssetsManager.onboardingOneDark),
+                      Image.asset(
+                        AssetsManager.onboardingOneDark,
+                        height: height * 0.3,
+                      ),
                       Text(
                         AppLocalizations.of(context)!.no_fav_events,
                         style: TextStyles.bold20PrimaryLight,

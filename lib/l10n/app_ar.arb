@@ -70,5 +70,20 @@
 "edit_event" : "تعديل الحدث",
 "update_event" : "تحديث الحدث",
 "event_updated" : "تم تحديث الحدث بنجاح",
-"event_added" : "تمت اضافة الحدث بنجاح"
+"event_added" : "تمت اضافة الحدث بنجاح",
+"name_validation" : "الرجاء ادخال الاسم",
+"email_validation" : "الرجاء ادخال الايميل",
+"email_format_validation" : "الرجاء ادخال ايميل صحيح",
+"password_validation" : "الرجاء ادخال كلمة المرور",
+"password_format_validation" : "يجب ان لا تقل كلمة المرور عن 6 احرف",
+"rePassword_validation" : "الرجاء ادخال تاكيد كلمة المرور",
+"rePassword_format_validation" : "كلمة المرور غير متطابقة",
+"loading" : "تحميل...",
+"login_successfully" : "تم تسجيل الدخول بنجاح",
+"register_successfully" : "تم انشاء الحساب",
+"error" : "خطأ!!!",
+"success" : "عملية ناجحة",
+"ok" : "تم",
+"email_and_password_wrong" : "لقد حدث خطأ ما، البريد الإلكتروني أو كلمة المرور غير صحيحة",
+"register_error" : "لقد حدث خطأ ما"
 }
